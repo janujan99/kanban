@@ -1,0 +1,31 @@
+import React, { useState } from "react";
+export default function NavDropDown(props: any) {
+  let boardNames = [];
+  for (let i = 0; i < props.boardList.length; i++)
+    boardNames.push(
+      <li>
+        <label>{props.boardList[i].name}</label>
+      </li>
+    );
+  return (
+    <div>
+      <div className="dropdown">
+        <label tabIndex={0} className="btn m-1 background bg-white">
+          Platform Launch
+        </label>
+        <ul
+          tabIndex={0}
+          className="dropdown-content menu p-2 shadow bg-base-100 rounded-box w-52"
+        >
+          <h3>All boards ({props.boardList.length})</h3>
+          {boardNames}
+          <br></br>
+          <li>
+            <label htmlFor="my-modal2">+ Create New Board</label>
+          </li>
+          <li></li>
+        </ul>
+      </div>
+    </div>
+  );
+}
