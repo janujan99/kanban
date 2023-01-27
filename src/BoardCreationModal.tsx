@@ -6,7 +6,6 @@ export default function BoardCreationModal(props: any) {
     name: "Board Title",
     columns: ["Todo", "Doing", "Done"],
   });
-  console.log(board);
   function removeColumn(s: string, index: number) {
     console.log(s + index);
     let temp: string[] = [];
@@ -16,7 +15,7 @@ export default function BoardCreationModal(props: any) {
     setBoard({ name: board.name, columns: temp });
   }
   function editName(newName: string) {
-    setBoard({ name: newName, columns: board.columns });
+    setBoard({ name: newName, columns: board.columns.map((col) => col) });
   }
   function addColumn() {
     setBoard({
@@ -25,7 +24,7 @@ export default function BoardCreationModal(props: any) {
     });
   }
   function editColumn(newValue: string, index: number) {
-    let temp: string[] = board.columns;
+    let temp: string[] = board.columns.map((col) => col);
     temp[index] = newValue;
     setBoard({ name: board.name, columns: temp });
   }

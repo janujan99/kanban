@@ -7,16 +7,17 @@ import NavBar from "./NavBar";
 function App() {
   const newBoards: Board[] = [];
   const [boards, setBoards] = useState(newBoards);
-  function saveBoard(board: Board) {
+  console.log(boards);
+  function addNewBoard(board: Board) {
     let temp: Board[] = boards;
-    temp.push({ name: board.name, columns: board.columns });
-    console.log(temp);
+    temp.push({ name: board.name, columns: board.columns.map((col) => col) });
     setBoards(temp);
+    console.log(temp);
   }
   return (
     <div className="App">
       <NavBar boardList={boards} />
-      <BoardCreationModal boardList={boards} save={saveBoard} />
+      <BoardCreationModal save={addNewBoard} />
     </div>
   );
 }

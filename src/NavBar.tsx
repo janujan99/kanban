@@ -1,7 +1,11 @@
 import React, { useState } from "react";
 import NavDropDown from "./NavDropDown";
 import TaskModal from "./TaskModal";
-export default function NavBar(props: any) {
+import { Board } from "./kanbanStates";
+interface NavBarProps {
+  boardList: Board[];
+}
+export default function NavBar(props: NavBarProps) {
   return (
     <div className="navbar bg-base-100">
       <div className="flex-none">
@@ -22,8 +26,8 @@ export default function NavBar(props: any) {
         </button>
       </div>
       <div className="flex-1">
-        <NavDropDown boardList={props.boardList} />
-        <TaskModal />
+        <NavDropDown key="navdropdown1" boardList={props.boardList} />
+        <TaskModal key="taskmodal1" />
       </div>
       <div className="flex-none"></div>
     </div>

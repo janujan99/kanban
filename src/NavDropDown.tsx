@@ -1,12 +1,11 @@
 import React, { useState } from "react";
-export default function NavDropDown(props: any) {
-  let boardNames = [];
-  for (let i = 0; i < props.boardList.length; i++)
-    boardNames.push(
-      <li>
-        <label>{props.boardList[i].name}</label>
-      </li>
-    );
+import { Board } from "./kanbanStates";
+interface NavDropDownProps {
+  boardList: Board[];
+}
+export default function NavDropDown(props: NavDropDownProps) {
+  console.log(props.boardList);
+  console.log("Hi");
   return (
     <div>
       <div className="dropdown">
@@ -18,7 +17,11 @@ export default function NavDropDown(props: any) {
           className="dropdown-content menu p-2 shadow bg-base-100 rounded-box w-52"
         >
           <h3>All boards ({props.boardList.length})</h3>
-          {boardNames}
+          {props.boardList.map((board) => (
+            <li>
+              <label>{board.name}</label>
+            </li>
+          ))}
           <br></br>
           <li>
             <label htmlFor="my-modal2">+ Create New Board</label>
