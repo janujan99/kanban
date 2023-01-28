@@ -5,7 +5,6 @@ export default function SubTaskMenu() {
     "eg. Make coffee",
     "eg. Drink coffee & smile",
   ]);
-  console.log(placeHolders);
   function addTask() {
     setPlaceHolders(placeHolders.concat(["eg. Make coffee"]));
   }

@@ -2,8 +2,10 @@ import React, { useState } from "react";
 import NavDropDown from "./NavDropDown";
 import TaskModal from "./TaskModal";
 import { Board } from "./kanbanStates";
+import { FunctionLikeDeclaration } from "typescript";
 interface NavBarProps {
   boardList: Board[];
+  switchBoard: (index: number) => void;
 }
 export default function NavBar(props: NavBarProps) {
   return (
@@ -26,7 +28,11 @@ export default function NavBar(props: NavBarProps) {
         </button>
       </div>
       <div className="flex-1">
-        <NavDropDown key="navdropdown1" boardList={props.boardList} />
+        <NavDropDown
+          key="navdropdown1"
+          boardList={props.boardList}
+          switchBoard={props.switchBoard}
+        />
         <TaskModal key="taskmodal1" />
       </div>
       <div className="flex-none"></div>

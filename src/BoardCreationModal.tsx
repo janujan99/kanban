@@ -63,7 +63,13 @@ export default function BoardCreationModal(props: any) {
             <label
               htmlFor="my-modal2"
               className="btn"
-              onClick={() => props.save(board)}
+              onClick={() => {
+                props.save(board);
+                setBoard({
+                  name: "New Board",
+                  columns: ["Todo", "Doing", "Done"],
+                });
+              }}
             >
               Save Changes
             </label>
