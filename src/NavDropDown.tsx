@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { Board } from "./kanbanStates";
 interface NavDropDownProps {
   boardList: Board[];
+  currentBoardIndex: number;
   switchBoard: (index: number) => void;
 }
 export default function NavDropDown(props: NavDropDownProps) {
@@ -19,7 +20,9 @@ export default function NavDropDown(props: NavDropDownProps) {
     <div>
       <div className="dropdown">
         <label tabIndex={0} className="btn m-1 background bg-white">
-          Platform Launch
+          {props.boardList.length > 0
+            ? props.boardList[props.currentBoardIndex].name
+            : "Kanban"}
         </label>
         <ul
           tabIndex={0}

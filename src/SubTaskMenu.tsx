@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import FormTextInput from "./FormTextInput";
-export default function SubTaskMenu() {
+export default function TaskMenu() {
   const [placeHolders, setPlaceHolders] = useState([
     "eg. Make coffee",
     "eg. Drink coffee & smile",

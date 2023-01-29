@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import ModalTextInput from "./ModalTextInput";
-import SubTaskMenu from "./SubTaskMenu";
+import TaskMenu from "./SubTaskMenu";
 export default function TaskModal() {
   return (
     <div>
@@ -18,7 +18,7 @@ export default function TaskModal() {
             label="Description"
             placeholder="e.g. It's always good to take a break. The 15 minute break will recharge the batteries a little."
           />
-          <SubTaskMenu />
+          <TaskMenu />
           <label className="label">
             <span className="label-text">Status</span>
             <span className="label-text-alt"></span>

@@ -1,16 +1,24 @@
 import React, { useState } from "react";
+import { Board, Column, BoardDisplayUnit } from "./kanbanStates";
 import FormTextInput from "./FormTextInput";
 import ModalTextInput from "./ModalTextInput";
-export default function BoardCreationModal(props: any) {
-  const [board, setBoard] = useState({
+interface BoardCreatorModalProps {
+  addBoard: (board: Board) => void;
+}
+export default function BoardCreatorModal(props: BoardCreatorModalProps) {
+  const [board, setBoard] = useState<Board>({
     name: "Board Title",
-    columns: ["Todo", "Doing", "Done"],
+    columns: [
+      { name: "Todo", tasks: [] },
+      { name: "Doing", tasks: [] },
+      { name: "Done", tasks: [] },
+    ],
   });
   function removeColumn(s: string, index: number) {
-    console.log(s + index);
-    let temp: string[] = [];
+    let temp: Column[] = [];
     for (let i = 0; i < board.columns.length; i++) {
-      if (board.columns[i] !== s || i !== index) temp.push(board.columns[i]);
+      if (board.columns[i].name !== s || i !== index)
+        temp.push(board.columns[i]);
     }
     setBoard({ name: board.name, columns: temp });
   }
@@ -20,12 +28,12 @@ export default function BoardCreationModal(props: any) {
   function addColumn() {
     setBoard({
       name: board.name,
-      columns: board.columns.concat(["New Column"]),
+      columns: board.columns.concat({ name: "New Column", tasks: [] }),
     });
   }
   function editColumn(newValue: string, index: number) {
-    let temp: string[] = board.columns.map((col) => col);
-    temp[index] = newValue;
+    let temp: Column[] = board.columns.map((col) => col);
+    temp[index].name = newValue;
     setBoard({ name: board.name, columns: temp });
   }
   let columnRows = [];
@@ -34,7 +42,7 @@ export default function BoardCreationModal(props: any) {
       <FormTextInput
         key={i}
         index={i}
-        placeholder={board.columns[i]}
+        placeholder={board.columns[i].name}
         handleExitClick={removeColumn}
         handleChange={editColumn}
       />
@@ -64,10 +72,14 @@ export default function BoardCreationModal(props: any) {
               htmlFor="my-modal2"
               className="btn"
               onClick={() => {
-                props.save(board);
+                props.addBoard(board);
                 setBoard({
                   name: "New Board",
-                  columns: ["Todo", "Doing", "Done"],
+                  columns: [
+                    { name: "Todo", tasks: [] },
+                    { name: "Doing", tasks: [] },
+                    { name: "Done", tasks: [] },
+                  ],
                 });
               }}
             >
