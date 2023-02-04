@@ -20,22 +20,34 @@ function App() {
   //  console.log(boardDisplayUnit.boards[boardDisplayUnit.currBoardIndex]);
   console.log(boardDisplayUnit.currColumnIndex, boardDisplayUnit.currTaskIndex);
 
-  function saveTask(colIndex: number, task: Task, edit: boolean = false) {
-    if (edit) {
-    } else {
-      let temp: Board[] = boardDisplayUnit.boards.map((i) => i);
-      temp[boardDisplayUnit.currBoardIndex].columns[colIndex].tasks.push(task);
-      setBoardDisplayUnit({
-        boards: temp,
-        currBoardIndex: boardDisplayUnit.currBoardIndex,
-        currColumnIndex: colIndex,
-        currTaskIndex:
-          temp[boardDisplayUnit.currBoardIndex].columns[colIndex].tasks.length -
-          1,
-      });
-    }
+  function addTask(colIndex: number, task: Task) {
+    let temp: Board[] = boardDisplayUnit.boards.map((i) => i);
+    temp[boardDisplayUnit.currBoardIndex].columns[colIndex].tasks.push(task);
+    setBoardDisplayUnit({
+      boards: temp,
+      currBoardIndex: boardDisplayUnit.currBoardIndex,
+      currColumnIndex: colIndex,
+      currTaskIndex:
+        temp[boardDisplayUnit.currBoardIndex].columns[colIndex].tasks.length -
+        1,
+    });
   }
-
+  function editTask(task: Task) {
+    let currTasks: Task[] = boardDisplayUnit.boards[
+      boardDisplayUnit.currBoardIndex
+    ].columns[boardDisplayUnit.currColumnIndex].tasks.map((i: Task) => i);
+    currTasks[boardDisplayUnit.currTaskIndex] = task;
+    let tempBoards: Board[] = boardDisplayUnit.boards.map((i) => i);
+    tempBoards[boardDisplayUnit.currBoardIndex].columns[
+      boardDisplayUnit.currColumnIndex
+    ].tasks = currTasks;
+    setBoardDisplayUnit({
+      boards: tempBoards,
+      currBoardIndex: boardDisplayUnit.currBoardIndex,
+      currColumnIndex: boardDisplayUnit.currColumnIndex,
+      currTaskIndex: boardDisplayUnit.currTaskIndex,
+    });
+  }
   function saveBoard(board: Board, edit: boolean = false) {
     if (edit) {
       setBoardDisplayUnit((currentBoardUnit) => {
@@ -99,7 +111,7 @@ function App() {
   return (
     <div className="App">
       <NavBar
-        saveTask={saveTask}
+        saveTask={addTask}
         boardDisplayUnit={boardDisplayUnit}
         switchBoard={setCurrentBoard}
       />
@@ -137,6 +149,7 @@ function App() {
                 boardDisplayUnit.currColumnIndex
               ].tasks[boardDisplayUnit.currTaskIndex]
             }
+            editTask={editTask}
           />
         )}
       <BoardDeletionWarningModal deleteBoard={deleteBoard} />
