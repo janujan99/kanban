@@ -1,8 +1,8 @@
 import React, { useState } from "react";
 import BoardDisplay from "./BoardDisplay";
-import { BoardDisplayUnit, Task } from "./kanbanStates";
+import { BoardDisplayUnit, Task, SubTask } from "./kanbanStates";
 import ModalTextInput from "./ModalTextInput";
-import TaskMenu from "./TaskMenu";
+import FormTextInput from "./FormTextInput";
 interface TaskModalProps {
   saveTask: (boardIndex: number, colIndex: number, task: Task) => void;
   boardDisplayUnit: BoardDisplayUnit;
@@ -18,6 +18,8 @@ export default function TaskModal(props: TaskModalProps) {
     ],
   });
   const [currColumnIndex, setCurrColumnIndex] = useState<number>(0);
+
+  console.log(currTask);
   function handleTitleChange(s: string) {
     setCurrTask({
       title: s,
@@ -32,7 +34,48 @@ export default function TaskModal(props: TaskModalProps) {
       subTasks: currTask.subTasks,
     });
   }
-
+  function addSubTask() {
+    setCurrTask({
+      title: currTask.title,
+      description: currTask.description,
+      subTasks: currTask.subTasks.concat({
+        title: "eg. Make coffee",
+        isCompleted: false,
+      }),
+    });
+  }
+  function removeSubTask(index: number) {
+    let temp: SubTask[] = [];
+    for (let i = 0; i < currTask.subTasks.length; i++) {
+      if (i !== index) temp.push(currTask.subTasks[i]);
+    }
+    setCurrTask({
+      title: currTask.title,
+      description: currTask.description,
+      subTasks: temp,
+    });
+  }
+  function editSubTaskTitle(value: string, index: number) {
+    let temp: SubTask[] = currTask.subTasks.map((i) => i);
+    temp[index].title = value;
+    setCurrTask({
+      title: currTask.title,
+      description: currTask.description,
+      subTasks: temp,
+    });
+  }
+  let subTaskRows = [];
+  for (let i = 0; i < currTask.subTasks.length; i++) {
+    subTaskRows.push(
+      <FormTextInput
+        index={i}
+        placeholder={currTask.subTasks[i].title}
+        value={currTask.subTasks[i].title}
+        handleExitClick={removeSubTask}
+        handleChange={editSubTaskTitle}
+      />
+    );
+  }
   return (
     <div>
       {/* The button to open modal, which only displays if there are boards already there */}
@@ -56,7 +99,17 @@ export default function TaskModal(props: TaskModalProps) {
             placeholder={currTask.description}
             handleChange={handleDescriptionChange}
           />
-          <TaskMenu />
+          <div>
+            <label className="label">
+              <span className="label-text">Subtask</span>
+              <span className="label-text-alt"></span>
+            </label>
+
+            {subTaskRows}
+            <button className="btn" onClick={() => addSubTask()}>
+              + Add New Subtask
+            </button>
+          </div>
           <label className="label">
             <span className="label-text">Status</span>
             <span className="label-text-alt"></span>

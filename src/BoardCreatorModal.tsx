@@ -30,11 +30,10 @@ export default function BoardCreatorModal(props: BoardCreatorModalProps) {
     } else {
     }
   }
-  function removeColumn(s: string, index: number) {
+  function removeColumn(index: number) {
     let temp: Column[] = [];
     for (let i = 0; i < board.columns.length; i++) {
-      if (board.columns[i].name !== s || i !== index)
-        temp.push(board.columns[i]);
+      if (i !== index) temp.push(board.columns[i]);
     }
     setBoard({ name: board.name, columns: temp });
   }

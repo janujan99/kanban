@@ -4,7 +4,7 @@ interface FormTextInputProps {
   placeholder: string;
   index: number;
   handleChange: (val: string, index: number) => void;
-  handleExitClick: (val: string, index: number) => void;
+  handleExitClick: (index: number) => void;
 }
 export default function FormTextInput(props: FormTextInputProps) {
   return (
@@ -17,7 +17,7 @@ export default function FormTextInput(props: FormTextInputProps) {
       />
       <button
         className="btn btn-circle"
-        onClick={() => props.handleExitClick(props.placeholder, props.index)}
+        onClick={() => props.handleExitClick(props.index)}
       >
         <svg
           xmlns="http://www.w3.org/2000/svg"

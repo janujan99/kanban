@@ -19,6 +19,9 @@ export default function BoardDisplay(props: BoardDisplayProps) {
       {props.boardToDisplay.columns.map((col, i) => (
         <li key={i}>
           <h2>{col.name}</h2>
+          {props.boardToDisplay!.columns[i].tasks.map((task, i) => (
+            <li>{task.title}</li>
+          ))}
         </li>
       ))}
       <label htmlFor="editBoardModal">+ Add New Column</label>
