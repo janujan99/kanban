@@ -1,17 +1,16 @@
 import React, { useState } from "react";
-import { Board } from "./kanbanStates";
+import { Board, BoardDisplayUnit } from "./kanbanStates";
 interface NavDropDownProps {
-  boardList: Board[];
-  currentBoardIndex: number;
+  boardDisplayUnit: BoardDisplayUnit;
   switchBoard: (index: number) => void;
 }
 export default function NavDropDown(props: NavDropDownProps) {
   let boardDisplayList = [];
-  for (let i = 0; i < props.boardList.length; i++) {
+  for (let i = 0; i < props.boardDisplayUnit.boards.length; i++) {
     boardDisplayList.push(
       <li>
         <label key={i} onClick={() => props.switchBoard(i)}>
-          {props.boardList[i].name}
+          {props.boardDisplayUnit.boards[i].name}
         </label>
       </li>
     );
@@ -20,19 +19,21 @@ export default function NavDropDown(props: NavDropDownProps) {
     <div>
       <div className="dropdown">
         <label tabIndex={0} className="btn m-1 background bg-white">
-          {props.boardList.length > 0
-            ? props.boardList[props.currentBoardIndex].name
+          {props.boardDisplayUnit.boards.length > 0
+            ? props.boardDisplayUnit.boards[
+                props.boardDisplayUnit.currentBoardIndex
+              ].name
             : "Kanban"}
         </label>
         <ul
           tabIndex={0}
           className="dropdown-content menu p-2 shadow bg-base-100 rounded-box w-52"
         >
-          <h3>All boards ({props.boardList.length})</h3>
+          <h3>All boards ({props.boardDisplayUnit.boards.length})</h3>
           {boardDisplayList}
           <br></br>
           <li>
-            <label htmlFor="my-modal2">+ Create New Board</label>
+            <label htmlFor="addBoardModal">+ Create New Board</label>
           </li>
           <li></li>
         </ul>

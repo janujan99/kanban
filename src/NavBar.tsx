@@ -1,11 +1,11 @@
 import React, { useState } from "react";
 import NavDropDown from "./NavDropDown";
 import TaskModal from "./TaskModal";
-import { Board } from "./kanbanStates";
+import { Board, BoardDisplayUnit, Task } from "./kanbanStates";
 interface NavBarProps {
-  boardList: Board[];
-  currentBoardIndex: number;
+  boardDisplayUnit: BoardDisplayUnit;
   switchBoard: (index: number) => void;
+  saveTask: (boardIndex: number, colIndex: number, task: Task) => void;
 }
 export default function NavBar(props: NavBarProps) {
   return (
@@ -30,11 +30,14 @@ export default function NavBar(props: NavBarProps) {
       <div className="flex-1">
         <NavDropDown
           key="navdropdown1"
-          boardList={props.boardList}
-          currentBoardIndex={props.currentBoardIndex}
+          boardDisplayUnit={props.boardDisplayUnit}
           switchBoard={props.switchBoard}
         />
-        <TaskModal key="taskmodal1" />
+        <TaskModal
+          key="taskmodal1"
+          boardDisplayUnit={props.boardDisplayUnit}
+          saveTask={props.saveTask}
+        />
       </div>
       <div className="dropdown">
         <label tabIndex={0} className="btn btn-ghost btn-circle">
@@ -58,14 +61,10 @@ export default function NavBar(props: NavBarProps) {
           className="menu menu-compact dropdown-content mt-3 p-2 shadow bg-base-100 rounded-box w-52"
         >
           <li>
-            <a>Edit Board</a>
+            <label htmlFor="editBoardModal">+ Edit Board</label>
           </li>
           <li>
-            <a>
-              <label htmlFor="my-modal-4" className="btn">
-                Delete Board
-              </label>
-            </a>
+            <label htmlFor="deleteBoardModal">Delete Board</label>
           </li>
         </ul>
       </div>

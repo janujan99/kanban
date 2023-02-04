@@ -1,5 +1,10 @@
 import React, { useState } from "react";
-export default function ModalTextInput(props: any) {
+interface ModalTextInputProps {
+  label: string;
+  placeholder: string;
+  handleChange: (s: string) => void;
+}
+export default function ModalTextInput(props: ModalTextInputProps) {
   return (
     <div className="form-control w-full max-w-xs">
       <label className="label">

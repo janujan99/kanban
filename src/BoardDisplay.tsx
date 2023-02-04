@@ -4,7 +4,7 @@ interface BoardDisplayProps {
   boardToDisplay: Board | null;
 }
 export default function BoardDisplay(props: BoardDisplayProps) {
-  console.log(JSON.stringify(props.boardToDisplay));
+  //console.log(JSON.stringify(props.boardToDisplay));
   if (props.boardToDisplay == null)
     return <h2>Create a board to get started</h2>;
   else if (props.boardToDisplay.columns.length == 0)
@@ -21,7 +21,7 @@ export default function BoardDisplay(props: BoardDisplayProps) {
           <h2>{col.name}</h2>
         </li>
       ))}
-      <button>+ Add New Column</button>
+      <label htmlFor="editBoardModal">+ Add New Column</label>
     </div>
   );
 }

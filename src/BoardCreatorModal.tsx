@@ -3,17 +3,33 @@ import { Board, Column, BoardDisplayUnit } from "./kanbanStates";
 import FormTextInput from "./FormTextInput";
 import ModalTextInput from "./ModalTextInput";
 interface BoardCreatorModalProps {
-  addBoard: (board: Board) => void;
+  saveBoard: (board: Board, edit: boolean) => void;
+  boardDisplayUnit: BoardDisplayUnit;
+  htmlForString: string;
+  title: string;
 }
 export default function BoardCreatorModal(props: BoardCreatorModalProps) {
-  const [board, setBoard] = useState<Board>({
-    name: "Board Title",
-    columns: [
-      { name: "Todo", tasks: [] },
-      { name: "Doing", tasks: [] },
-      { name: "Done", tasks: [] },
-    ],
-  });
+  const [board, setBoard] = useState<Board>(
+    props.htmlForString == "editBoardModal"
+      ? props.boardDisplayUnit.boards[props.boardDisplayUnit.currentBoardIndex]
+      : {
+          name: "New Board",
+          columns: [
+            { name: "Todo", tasks: [] },
+            { name: "Doing", tasks: [] },
+            { name: "Done", tasks: [] },
+          ],
+        }
+  );
+  function checkValidBoardName() {
+    if (props.htmlForString == "addBoardModal") {
+      for (let i = 0; i < props.boardDisplayUnit.boards.length; i++) {
+        if (board.name == props.boardDisplayUnit.boards[i].name) return false;
+      }
+      return true;
+    } else {
+    }
+  }
   function removeColumn(s: string, index: number) {
     let temp: Column[] = [];
     for (let i = 0; i < board.columns.length; i++) {
@@ -43,6 +59,7 @@ export default function BoardCreatorModal(props: BoardCreatorModalProps) {
         key={i}
         index={i}
         placeholder={board.columns[i].name}
+        value={board.columns[i].name}
         handleExitClick={removeColumn}
         handleChange={editColumn}
       />
@@ -50,13 +67,21 @@ export default function BoardCreatorModal(props: BoardCreatorModalProps) {
   }
   return (
     <div>
-      <input type="checkbox" id="my-modal2" className="modal-toggle" />
+      <input
+        type="checkbox"
+        id={props.htmlForString}
+        className="modal-toggle"
+      />
       <div className="modal">
         <div className="modal-box">
-          <h3 className="font-bold text-lg">Edit Board</h3>
+          <h3 className="font-bold text-lg">
+            {props.htmlForString == "addBoardModal"
+              ? "Add New Board"
+              : "Edit Board"}
+          </h3>
           <ModalTextInput
             label="Board Name"
-            placeholder="New Board"
+            placeholder={props.title}
             handleChange={editName}
           />
           <label className="label">
@@ -69,10 +94,13 @@ export default function BoardCreatorModal(props: BoardCreatorModalProps) {
           </button>
           <div className="modal-action">
             <label
-              htmlFor="my-modal2"
+              htmlFor={props.htmlForString}
               className="btn"
               onClick={() => {
-                props.addBoard(board);
+                props.saveBoard(
+                  board,
+                  props.htmlForString == "addBoardModal" ? false : true
+                );
                 setBoard({
                   name: "New Board",
                   columns: [

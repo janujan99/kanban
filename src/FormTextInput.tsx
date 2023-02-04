@@ -1,10 +1,16 @@
 import React, { useState } from "react";
-export default function FormTextInput(props: any) {
+interface FormTextInputProps {
+  value: string;
+  placeholder: string;
+  index: number;
+  handleChange: (val: string, index: number) => void;
+  handleExitClick: (val: string, index: number) => void;
+}
+export default function FormTextInput(props: FormTextInputProps) {
   return (
     <div>
       <input
         type="text"
-        placeholder={props.placeholder}
         value={props.value}
         onChange={(e) => props.handleChange(e.target.value, props.index)}
         className="input input-bordered w-full max-w-xs"

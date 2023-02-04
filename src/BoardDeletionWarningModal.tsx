@@ -10,8 +10,8 @@ export default function BoardDeletionWarningModal(
       {/* The button to open modal */}
 
       {/* Put this part before </body> tag */}
-      <input type="checkbox" id="my-modal-4" className="modal-toggle" />
-      <label htmlFor="my-modal-4" className="modal cursor-pointer">
+      <input type="checkbox" id="deleteBoardModal" className="modal-toggle" />
+      <label htmlFor="deleteBoardModal" className="modal cursor-pointer">
         <label className="modal-box relative" htmlFor="">
           <h3 className="text-lg font-bold">Delete this board?</h3>
           <p className="py-4">
@@ -19,10 +19,13 @@ export default function BoardDeletionWarningModal(
             all columns and tasks and cannot be reversed.
           </p>
           <div>
-            <label htmlFor="my-modal-4" onClick={() => props.deleteBoard()}>
+            <label
+              htmlFor="deleteBoardModal"
+              onClick={() => props.deleteBoard()}
+            >
               Delete
             </label>
-            <label htmlFor="my-modal-4">Cancel</label>
+            <label htmlFor="deleteBoardModal">Cancel</label>
           </div>
         </label>
       </label>

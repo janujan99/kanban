@@ -1,7 +1,7 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import logo from "./logo.svg";
 import "./App.css";
-import { Board, BoardDisplayUnit } from "./kanbanStates";
+import { Board, BoardDisplayUnit, Task } from "./kanbanStates";
 import BoardCreatorModal from "./BoardCreatorModal";
 import BoardDeletionWarningModal from "./BoardDeletionWarningModal";
 import NavBar from "./NavBar";
@@ -12,12 +12,39 @@ function App() {
     boards: [],
     currentBoardIndex: 0,
   });
-  function addNewBoard(board: Board) {
-    setBoardDisplayUnit((currentBoardUnit) => {
-      let temp: Board[] = currentBoardUnit.boards.map((board) => board);
-      temp.push({ name: board.name, columns: board.columns.map((col) => col) });
-      return { boards: temp, currentBoardIndex: temp.length - 1 };
-    });
+  function saveTask(
+    boardIndex: number,
+    colIndex: number,
+    task: Task,
+    edit: boolean = false
+  ) {
+    if (edit) {
+    } else
+      boardDisplayUnit.boards[boardIndex].columns[colIndex].tasks.push(task);
+  }
+  function saveBoard(board: Board, edit: boolean = false) {
+    if (edit) {
+      setBoardDisplayUnit((currentBoardUnit) => {
+        let temp: Board[] = [];
+        for (let i = 0; i < currentBoardUnit.boards.length; i++) {
+          if (i == currentBoardUnit.currentBoardIndex) temp.push(board);
+          else temp.push(currentBoardUnit.boards[i]);
+        }
+        return {
+          boards: temp,
+          currentBoardIndex: boardDisplayUnit.currentBoardIndex,
+        };
+      });
+    } else {
+      setBoardDisplayUnit((currentBoardUnit) => {
+        let temp: Board[] = currentBoardUnit.boards.map((brd) => brd);
+        temp.push({
+          name: board.name,
+          columns: board.columns.map((col) => col),
+        });
+        return { boards: temp, currentBoardIndex: temp.length - 1 };
+      });
+    }
   }
   function deleteBoard() {
     setBoardDisplayUnit({
@@ -39,11 +66,28 @@ function App() {
   return (
     <div className="App">
       <NavBar
-        boardList={boardDisplayUnit.boards}
-        currentBoardIndex={boardDisplayUnit.currentBoardIndex}
+        saveTask={saveTask}
+        boardDisplayUnit={boardDisplayUnit}
         switchBoard={setCurrentBoard}
       />
-      <BoardCreatorModal addBoard={addNewBoard} />
+      <BoardCreatorModal
+        saveBoard={saveBoard}
+        boardDisplayUnit={boardDisplayUnit}
+        htmlForString="addBoardModal"
+        title="New Board"
+      />
+      {boardDisplayUnit.boards.length > 0 && (
+        <BoardCreatorModal
+          saveBoard={saveBoard}
+          boardDisplayUnit={boardDisplayUnit}
+          htmlForString="editBoardModal"
+          title={
+            boardDisplayUnit.boards.length > 0
+              ? boardDisplayUnit.boards[boardDisplayUnit.currentBoardIndex].name
+              : ""
+          }
+        />
+      )}
       <BoardDisplay
         boardToDisplay={
           boardDisplayUnit.currentBoardIndex >= 0
