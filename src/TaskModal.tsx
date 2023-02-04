@@ -4,7 +4,7 @@ import { BoardDisplayUnit, Task, SubTask } from "./kanbanStates";
 import ModalTextInput from "./ModalTextInput";
 import FormTextInput from "./FormTextInput";
 interface TaskModalProps {
-  saveTask: (boardIndex: number, colIndex: number, task: Task) => void;
+  saveTask: (colIndex: number, task: Task) => void;
   boardDisplayUnit: BoardDisplayUnit;
 }
 export default function TaskModal(props: TaskModalProps) {
@@ -141,13 +141,7 @@ export default function TaskModal(props: TaskModalProps) {
             <label
               htmlFor="taskModal"
               className="btn"
-              onClick={() =>
-                props.saveTask(
-                  props.boardDisplayUnit!.currentBoardIndex,
-                  currColumnIndex,
-                  currTask
-                )
-              }
+              onClick={() => props.saveTask(currColumnIndex, currTask)}
             >
               Submit
             </label>

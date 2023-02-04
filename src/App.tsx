@@ -12,15 +12,18 @@ function App() {
     boards: [],
     currentBoardIndex: 0,
   });
-  function saveTask(
-    boardIndex: number,
-    colIndex: number,
-    task: Task,
-    edit: boolean = false
-  ) {
+  function saveTask(colIndex: number, task: Task, edit: boolean = false) {
     if (edit) {
-    } else
-      boardDisplayUnit.boards[boardIndex].columns[colIndex].tasks.push(task);
+    } else {
+      let temp: Board[] = boardDisplayUnit.boards.map((i) => i);
+      temp[boardDisplayUnit.currentBoardIndex].columns[colIndex].tasks.push(
+        task
+      );
+      setBoardDisplayUnit({
+        boards: temp,
+        currentBoardIndex: boardDisplayUnit.currentBoardIndex,
+      });
+    }
   }
   function saveBoard(board: Board, edit: boolean = false) {
     if (edit) {

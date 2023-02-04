@@ -5,7 +5,7 @@ import { Board, BoardDisplayUnit, Task } from "./kanbanStates";
 interface NavBarProps {
   boardDisplayUnit: BoardDisplayUnit;
   switchBoard: (index: number) => void;
-  saveTask: (boardIndex: number, colIndex: number, task: Task) => void;
+  saveTask: (colIndex: number, task: Task) => void;
 }
 export default function NavBar(props: NavBarProps) {
   return (

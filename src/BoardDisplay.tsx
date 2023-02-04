@@ -18,9 +18,9 @@ export default function BoardDisplay(props: BoardDisplayProps) {
     <div>
       {props.boardToDisplay.columns.map((col, i) => (
         <li key={i}>
-          <h2>{col.name}</h2>
+          <h1>{col.name}</h1>
           {props.boardToDisplay!.columns[i].tasks.map((task, i) => (
-            <li>{task.title}</li>
+            <h3>{task.title}</h3>
           ))}
         </li>
       ))}
