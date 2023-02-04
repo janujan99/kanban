@@ -1,5 +1,7 @@
 import React, { useState } from "react";
 import { Board, Column, Task, SubTask } from "./kanbanStates";
+import "./TaskDisplayUnit.css";
+import TaskDisplayUnit from "./TaskDisplayUnit";
 interface BoardDisplayProps {
   boardToDisplay: Board | null;
 }
@@ -20,7 +22,7 @@ export default function BoardDisplay(props: BoardDisplayProps) {
         <li key={i}>
           <h1>{col.name}</h1>
           {props.boardToDisplay!.columns[i].tasks.map((task, i) => (
-            <h3>{task.title}</h3>
+            <TaskDisplayUnit task={task} />
           ))}
         </li>
       ))}

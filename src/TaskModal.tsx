@@ -19,7 +19,6 @@ export default function TaskModal(props: TaskModalProps) {
   });
   const [currColumnIndex, setCurrColumnIndex] = useState<number>(0);
 
-  console.log(currTask);
   function handleTitleChange(s: string) {
     setCurrTask({
       title: s,

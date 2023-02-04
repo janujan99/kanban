@@ -4,6 +4,7 @@ import "./App.css";
 import { Board, BoardDisplayUnit, Task } from "./kanbanStates";
 import BoardCreatorModal from "./BoardCreatorModal";
 import BoardDeletionWarningModal from "./BoardDeletionWarningModal";
+import TaskViewerModal from "./TaskViewerModal";
 import NavBar from "./NavBar";
 import BoardDisplay from "./BoardDisplay";
 
@@ -12,6 +13,9 @@ function App() {
     boards: [],
     currentBoardIndex: 0,
   });
+
+  if (boardDisplayUnit.boards.length > 0)
+    console.log(boardDisplayUnit.boards[boardDisplayUnit.currentBoardIndex]);
   function saveTask(colIndex: number, task: Task, edit: boolean = false) {
     if (edit) {
     } else {
