@@ -4,6 +4,7 @@ import "./TaskDisplayUnit.css";
 import TaskDisplayUnit from "./TaskDisplayUnit";
 interface BoardDisplayProps {
   boardToDisplay: Board | null;
+  setCurrentTask: (a: number, b: number) => void;
 }
 export default function BoardDisplay(props: BoardDisplayProps) {
   //console.log(JSON.stringify(props.boardToDisplay));
@@ -21,8 +22,11 @@ export default function BoardDisplay(props: BoardDisplayProps) {
       {props.boardToDisplay.columns.map((col, i) => (
         <li key={i}>
           <h1>{col.name}</h1>
-          {props.boardToDisplay!.columns[i].tasks.map((task, i) => (
-            <TaskDisplayUnit task={task} />
+          {props.boardToDisplay!.columns[i].tasks.map((task, j) => (
+            <TaskDisplayUnit
+              task={task}
+              setCurrentTask={() => props.setCurrentTask(i, j)}
+            />
           ))}
         </li>
       ))}

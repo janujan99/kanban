@@ -118,7 +118,7 @@ export default function TaskModal(props: TaskModalProps) {
               <label tabIndex={0} className="btn m-1">
                 {
                   props.boardDisplayUnit!.boards[
-                    props.boardDisplayUnit!.currentBoardIndex
+                    props.boardDisplayUnit!.currBoardIndex
                   ].columns[currColumnIndex].name
                 }
               </label>
@@ -127,7 +127,7 @@ export default function TaskModal(props: TaskModalProps) {
                 className="dropdown-content menu p-2 shadow bg-base-100 rounded-box w-52"
               >
                 {props.boardDisplayUnit!.boards[
-                  props.boardDisplayUnit!.currentBoardIndex
+                  props.boardDisplayUnit!.currBoardIndex
                 ].columns.map((col, i) => (
                   <li onClick={() => setCurrColumnIndex(i)}>
                     <a>{col.name}</a>

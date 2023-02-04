@@ -3,6 +3,7 @@ import { Task, SubTask } from "./kanbanStates";
 
 interface TaskDisplayUnitProps {
   task: Task;
+  setCurrentTask: () => void;
 }
 
 export default function TaskDisplayUnit(props: TaskDisplayUnitProps) {
@@ -11,7 +12,7 @@ export default function TaskDisplayUnit(props: TaskDisplayUnitProps) {
   ).length;
   let totalSubTasks: number = props.task.subTasks.length;
   return (
-    <label htmlFor="taskViewerModal">
+    <label htmlFor="taskViewerModal" onClick={props.setCurrentTask}>
       <div className="taskDisplayUnit">
         <h1>{props.task.title}</h1>
         <h3>

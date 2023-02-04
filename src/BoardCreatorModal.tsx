@@ -11,7 +11,7 @@ interface BoardCreatorModalProps {
 export default function BoardCreatorModal(props: BoardCreatorModalProps) {
   const [board, setBoard] = useState<Board>(
     props.htmlForString == "editBoardModal"
-      ? props.boardDisplayUnit.boards[props.boardDisplayUnit.currentBoardIndex]
+      ? props.boardDisplayUnit.boards[props.boardDisplayUnit.currBoardIndex]
       : {
           name: "New Board",
           columns: [

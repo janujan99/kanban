@@ -11,35 +11,44 @@ import BoardDisplay from "./BoardDisplay";
 function App() {
   const [boardDisplayUnit, setBoardDisplayUnit] = useState<BoardDisplayUnit>({
     boards: [],
-    currentBoardIndex: 0,
+    currBoardIndex: 0,
+    currColumnIndex: -1,
+    currTaskIndex: -1,
   });
 
-  if (boardDisplayUnit.boards.length > 0)
-    console.log(boardDisplayUnit.boards[boardDisplayUnit.currentBoardIndex]);
+  //if (boardDisplayUnit.boards.length > 0)
+  //  console.log(boardDisplayUnit.boards[boardDisplayUnit.currBoardIndex]);
+  console.log(boardDisplayUnit.currColumnIndex, boardDisplayUnit.currTaskIndex);
+
   function saveTask(colIndex: number, task: Task, edit: boolean = false) {
     if (edit) {
     } else {
       let temp: Board[] = boardDisplayUnit.boards.map((i) => i);
-      temp[boardDisplayUnit.currentBoardIndex].columns[colIndex].tasks.push(
-        task
-      );
+      temp[boardDisplayUnit.currBoardIndex].columns[colIndex].tasks.push(task);
       setBoardDisplayUnit({
         boards: temp,
-        currentBoardIndex: boardDisplayUnit.currentBoardIndex,
+        currBoardIndex: boardDisplayUnit.currBoardIndex,
+        currColumnIndex: colIndex,
+        currTaskIndex:
+          temp[boardDisplayUnit.currBoardIndex].columns[colIndex].tasks.length -
+          1,
       });
     }
   }
+
   function saveBoard(board: Board, edit: boolean = false) {
     if (edit) {
       setBoardDisplayUnit((currentBoardUnit) => {
         let temp: Board[] = [];
         for (let i = 0; i < currentBoardUnit.boards.length; i++) {
-          if (i == currentBoardUnit.currentBoardIndex) temp.push(board);
+          if (i == currentBoardUnit.currBoardIndex) temp.push(board);
           else temp.push(currentBoardUnit.boards[i]);
         }
         return {
           boards: temp,
-          currentBoardIndex: boardDisplayUnit.currentBoardIndex,
+          currBoardIndex: boardDisplayUnit.currBoardIndex,
+          currColumnIndex: board.columns.length > 0 ? 0 : -1,
+          currTaskIndex: -1,
         };
       });
     } else {
@@ -49,25 +58,42 @@ function App() {
           name: board.name,
           columns: board.columns.map((col) => col),
         });
-        return { boards: temp, currentBoardIndex: temp.length - 1 };
+        return {
+          boards: temp,
+          currBoardIndex: temp.length - 1,
+          currColumnIndex: currentBoardUnit.currColumnIndex,
+          currTaskIndex: currentBoardUnit.currTaskIndex,
+        };
       });
     }
   }
   function deleteBoard() {
     setBoardDisplayUnit({
       boards: boardDisplayUnit.boards.filter(
-        (el, i) => i != boardDisplayUnit.currentBoardIndex
+        (el, i) => i != boardDisplayUnit.currBoardIndex
       ),
-      currentBoardIndex:
-        boardDisplayUnit.currentBoardIndex - 1 > 0
-          ? boardDisplayUnit.currentBoardIndex - 1
+      currBoardIndex:
+        boardDisplayUnit.currBoardIndex - 1 > 0
+          ? boardDisplayUnit.currBoardIndex - 1
           : 0,
+      currColumnIndex: boardDisplayUnit.currColumnIndex,
+      currTaskIndex: boardDisplayUnit.currTaskIndex,
     });
   }
   function setCurrentBoard(index: number) {
     setBoardDisplayUnit({
       boards: boardDisplayUnit.boards,
-      currentBoardIndex: index,
+      currBoardIndex: index,
+      currColumnIndex: boardDisplayUnit.currColumnIndex,
+      currTaskIndex: boardDisplayUnit.currTaskIndex,
+    });
+  }
+  function setCurrentTask(colIndex: number, taskIndex: number) {
+    setBoardDisplayUnit({
+      boards: boardDisplayUnit.boards,
+      currBoardIndex: boardDisplayUnit.currBoardIndex,
+      currColumnIndex: colIndex,
+      currTaskIndex: taskIndex,
     });
   }
   return (
@@ -90,18 +116,29 @@ function App() {
           htmlForString="editBoardModal"
           title={
             boardDisplayUnit.boards.length > 0
-              ? boardDisplayUnit.boards[boardDisplayUnit.currentBoardIndex].name
+              ? boardDisplayUnit.boards[boardDisplayUnit.currBoardIndex].name
               : ""
           }
         />
       )}
       <BoardDisplay
         boardToDisplay={
-          boardDisplayUnit.currentBoardIndex >= 0
-            ? boardDisplayUnit.boards[boardDisplayUnit.currentBoardIndex]
+          boardDisplayUnit.currBoardIndex >= 0
+            ? boardDisplayUnit.boards[boardDisplayUnit.currBoardIndex]
             : null
         }
+        setCurrentTask={setCurrentTask}
       />
+      {boardDisplayUnit.currColumnIndex !== -1 &&
+        boardDisplayUnit.currTaskIndex != -1 && (
+          <TaskViewerModal
+            task={
+              boardDisplayUnit.boards[boardDisplayUnit.currBoardIndex].columns[
+                boardDisplayUnit.currColumnIndex
+              ].tasks[boardDisplayUnit.currTaskIndex]
+            }
+          />
+        )}
       <BoardDeletionWarningModal deleteBoard={deleteBoard} />
     </div>
   );

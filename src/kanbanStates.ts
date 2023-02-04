@@ -1,3 +1,5 @@
+import { NumberLiteralType } from "typescript";
+
 export interface Board {
   name: string;
   columns: Column[];
@@ -17,5 +19,7 @@ export interface SubTask {
 }
 export interface BoardDisplayUnit {
   boards: Board[];
-  currentBoardIndex: number;
+  currBoardIndex: number;
+  currColumnIndex: number;
+  currTaskIndex: number;
 }

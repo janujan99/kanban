@@ -21,7 +21,7 @@ export default function NavDropDown(props: NavDropDownProps) {
         <label tabIndex={0} className="btn m-1 background bg-white">
           {props.boardDisplayUnit.boards.length > 0
             ? props.boardDisplayUnit.boards[
-                props.boardDisplayUnit.currentBoardIndex
+                props.boardDisplayUnit.currBoardIndex
               ].name
             : "Kanban"}
         </label>
