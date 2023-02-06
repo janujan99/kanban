@@ -5,7 +5,7 @@ interface ModalTextInputProps {
   handleChange: (s: string) => void;
 }
 export default function ModalTextInput(props: ModalTextInputProps) {
-  const [value, setValue] = useState<string>(props.placeholder);
+  console.log("Placeholder: " + props.placeholder);
   return (
     <div className="form-control w-full max-w-xs">
       <label className="label">
@@ -15,10 +15,10 @@ export default function ModalTextInput(props: ModalTextInputProps) {
 
       <input
         type="text"
-        placeholder={value}
+        placeholder={props.placeholder}
+        value={props.placeholder}
         className="input input-bordered w-full max-w-xs"
         onChange={(e) => {
-          setValue(e.target.value);
           props.handleChange(e.target.value);
         }}
       />

@@ -1,5 +1,3 @@
-import { NumberLiteralType } from "typescript";
-
 export interface Board {
   name: string;
   columns: Column[];

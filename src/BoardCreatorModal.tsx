@@ -3,62 +3,39 @@ import { Board, Column, BoardDisplayUnit } from "./kanbanStates";
 import FormTextInput from "./FormTextInput";
 import ModalTextInput from "./ModalTextInput";
 interface BoardCreatorModalProps {
-  saveBoard: (board: Board, edit: boolean) => void;
-  boardDisplayUnit: BoardDisplayUnit;
+  addColumn: () => void;
+  editColumn: (newValue: string, index: number) => void;
+  editName: (newName: string) => void;
+  removeColumn: (index: number) => void;
+  addBoard: () => void;
+  editBoard: () => void;
+  modalBoard: Board;
   htmlForString: string;
   title: string;
 }
+
 export default function BoardCreatorModal(props: BoardCreatorModalProps) {
-  const [board, setBoard] = useState<Board>(
-    props.htmlForString == "editBoardModal"
-      ? props.boardDisplayUnit.boards[props.boardDisplayUnit.currBoardIndex]
-      : {
-          name: "New Board",
-          columns: [
-            { name: "Todo", tasks: [] },
-            { name: "Doing", tasks: [] },
-            { name: "Done", tasks: [] },
-          ],
-        }
-  );
-  function checkValidBoardName() {
-    if (props.htmlForString == "addBoardModal") {
-      for (let i = 0; i < props.boardDisplayUnit.boards.length; i++) {
-        if (board.name == props.boardDisplayUnit.boards[i].name) return false;
-      }
-      return true;
-    } else {
-    }
-  }
+  console.log(props.modalBoard);
   function removeColumn(index: number) {
-    let temp: Column[] = [];
-    for (let i = 0; i < board.columns.length; i++) {
-      if (i !== index) temp.push(board.columns[i]);
-    }
-    setBoard({ name: board.name, columns: temp });
+    props.removeColumn(index);
   }
   function editName(newName: string) {
-    setBoard({ name: newName, columns: board.columns.map((col) => col) });
+    props.editName(newName);
   }
   function addColumn() {
-    setBoard({
-      name: board.name,
-      columns: board.columns.concat({ name: "New Column", tasks: [] }),
-    });
+    props.addColumn();
   }
   function editColumn(newValue: string, index: number) {
-    let temp: Column[] = board.columns.map((col) => col);
-    temp[index].name = newValue;
-    setBoard({ name: board.name, columns: temp });
+    props.editColumn(newValue, index);
   }
   let columnRows = [];
-  for (let i = 0; i < board.columns.length; i++) {
+  for (let i = 0; i < props.modalBoard.columns.length; i++) {
     columnRows.push(
       <FormTextInput
         key={i}
         index={i}
-        placeholder={board.columns[i].name}
-        value={board.columns[i].name}
+        placeholder={props.modalBoard.columns[i].name}
+        value={props.modalBoard.columns[i].name}
         handleExitClick={removeColumn}
         handleChange={editColumn}
       />
@@ -80,7 +57,7 @@ export default function BoardCreatorModal(props: BoardCreatorModalProps) {
           </h3>
           <ModalTextInput
             label="Board Name"
-            placeholder={props.title}
+            placeholder={props.modalBoard.name}
             handleChange={editName}
           />
           <label className="label">
@@ -95,20 +72,11 @@ export default function BoardCreatorModal(props: BoardCreatorModalProps) {
             <label
               htmlFor={props.htmlForString}
               className="btn"
-              onClick={() => {
-                props.saveBoard(
-                  board,
-                  props.htmlForString == "addBoardModal" ? false : true
-                );
-                setBoard({
-                  name: "New Board",
-                  columns: [
-                    { name: "Todo", tasks: [] },
-                    { name: "Doing", tasks: [] },
-                    { name: "Done", tasks: [] },
-                  ],
-                });
-              }}
+              onClick={
+                props.htmlForString == "addBoardModal"
+                  ? props.addBoard
+                  : props.editBoard
+              }
             >
               Save Changes
             </label>

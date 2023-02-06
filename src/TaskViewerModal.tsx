@@ -8,7 +8,7 @@ interface TaskViewerModalProps {
 
 export default function TaskViewerModal(props: TaskViewerModalProps) {
   const [currTask, setCurrTask] = useState<Task>(props.task);
-
+  console.log(currTask);
   function toggleCheck(index: number) {
     let tempSubTasks: SubTask[] = currTask.subTasks.map((a) => a);
     tempSubTasks[index].isCompleted = !tempSubTasks[index].isCompleted;
