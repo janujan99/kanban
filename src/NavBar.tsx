@@ -6,6 +6,8 @@ interface NavBarProps {
   boardDisplayUnit: BoardDisplayUnit;
   switchBoard: (index: number) => void;
   saveTask: (colIndex: number, task: Task) => void;
+  resetModalBoardToAddMode: () => void;
+  resetModalBoardToEditMode: () => void;
 }
 export default function NavBar(props: NavBarProps) {
   return (
@@ -32,6 +34,7 @@ export default function NavBar(props: NavBarProps) {
           key="navdropdown1"
           boardDisplayUnit={props.boardDisplayUnit}
           switchBoard={props.switchBoard}
+          resetModalBoardToAddMode={props.resetModalBoardToAddMode}
         />
         <TaskModal
           key="taskmodal1"
@@ -61,7 +64,12 @@ export default function NavBar(props: NavBarProps) {
           className="menu menu-compact dropdown-content mt-3 p-2 shadow bg-base-100 rounded-box w-52"
         >
           <li>
-            <label htmlFor="editBoardModal">+ Edit Board</label>
+            <label
+              htmlFor="editBoardModal"
+              onClick={props.resetModalBoardToEditMode}
+            >
+              + Edit Board
+            </label>
           </li>
           <li>
             <label htmlFor="deleteBoardModal">Delete Board</label>

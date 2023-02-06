@@ -15,7 +15,6 @@ interface BoardCreatorModalProps {
 }
 
 export default function BoardCreatorModal(props: BoardCreatorModalProps) {
-  console.log(props.modalBoard);
   function removeColumn(index: number) {
     props.removeColumn(index);
   }

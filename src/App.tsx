@@ -16,7 +16,7 @@ function App() {
     currTaskIndex: -1,
   });
 
-  const [modalBoard, setModalBoard] = useState<Board>({
+  const [modalBoard, setModalBoard] = useState<Board | null>({
     name: "New Board",
     columns: [
       { name: "Todo", tasks: [] },
@@ -30,6 +30,9 @@ function App() {
     return JSON.parse(JSON.stringify(a));
   }
   //modal Board functions
+  function resetModalBoardToNull() {
+    setModalBoard(null);
+  }
   function resetModalBoardToAddMode() {
     setModalBoard(
       getObjectDeepCopy({
@@ -42,10 +45,14 @@ function App() {
       })
     );
   }
+  function resetModalBoardToEditMode() {
+    setModalBoard(getObjectDeepCopy(getCurrentBoard()!));
+  }
+
   function addBoardFromModal() {
     let temp = getObjectDeepCopy(boardDisplayData)
       .boards.map((b: Board) => b)
-      .concat([getObjectDeepCopy(modalBoard)]);
+      .concat([getObjectDeepCopy(modalBoard!)]);
     setBoardDisplayData(
       getObjectDeepCopy({
         boards: temp,
@@ -54,40 +61,41 @@ function App() {
         currTaskIndex: boardDisplayData.currTaskIndex,
       })
     );
-    resetModalBoardToAddMode();
+    resetModalBoardToNull();
   }
   function editBoardFromModal() {
     let temp = boardDisplayData.boards.map((b) => b);
-    temp[boardDisplayData.currBoardIndex] = modalBoard;
+    temp[boardDisplayData.currBoardIndex] = modalBoard!;
     setBoardDisplayData({
       boards: temp,
-      currBoardIndex: temp.length - 1,
+      currBoardIndex: boardDisplayData.currBoardIndex,
       currColumnIndex: boardDisplayData.currColumnIndex,
       currTaskIndex: boardDisplayData.currTaskIndex,
     });
+    resetModalBoardToNull();
   }
   function addColumnToModalBoard() {
     setModalBoard(
       getObjectDeepCopy({
-        name: modalBoard.name,
-        columns: modalBoard.columns.concat({ name: "New Column", tasks: [] }),
+        name: modalBoard!.name,
+        columns: modalBoard!.columns.concat({ name: "New Column", tasks: [] }),
       })
     );
   }
   function editColumnInModalBoard(s: string, i: number) {
-    let temp: Column[] = getObjectDeepCopy(modalBoard).columns;
+    let temp: Column[] = getObjectDeepCopy(modalBoard!).columns;
     temp[i].name = s;
-    setModalBoard(getObjectDeepCopy({ name: modalBoard.name, columns: temp }));
+    setModalBoard(getObjectDeepCopy({ name: modalBoard!.name, columns: temp }));
   }
   function editNameInModalBoard(newName: string) {
-    setModalBoard({ name: newName, columns: modalBoard.columns });
+    setModalBoard({ name: newName, columns: modalBoard!.columns });
   }
   function removeColumnFromModalBoard(index: number) {
     let temp: Column[] = [];
-    for (let i = 0; i < modalBoard.columns.length; i++) {
-      if (i !== index) temp.push(modalBoard.columns[i]);
+    for (let i = 0; i < modalBoard!.columns.length; i++) {
+      if (i !== index) temp.push(modalBoard!.columns[i]);
     }
-    setModalBoard({ name: modalBoard.name, columns: temp });
+    setModalBoard({ name: modalBoard!.name, columns: temp });
   }
   function getCurrentBoard() {
     if (boardDisplayData.currBoardIndex < 0) return null;
@@ -200,25 +208,35 @@ function App() {
         saveTask={addTask}
         boardDisplayUnit={boardDisplayData}
         switchBoard={setCurrentBoard}
+        resetModalBoardToAddMode={resetModalBoardToAddMode}
+        resetModalBoardToEditMode={resetModalBoardToEditMode}
       />
-      <BoardCreatorModal
-        addColumn={addColumnToModalBoard}
-        editColumn={editColumnInModalBoard}
-        editName={editNameInModalBoard}
-        removeColumn={removeColumnFromModalBoard}
-        addBoard={addBoardFromModal}
-        editBoard={editBoardFromModal}
-        modalBoard={modalBoard}
-        htmlForString="addBoardModal"
-        title="New Board"
-      />
-      {/*{getCurrentBoard() !== null && (
+      {modalBoard != null && (
         <BoardCreatorModal
-          boardDisplayUnit={boardDisplayData}
+          addColumn={addColumnToModalBoard}
+          editColumn={editColumnInModalBoard}
+          editName={editNameInModalBoard}
+          removeColumn={removeColumnFromModalBoard}
+          addBoard={addBoardFromModal}
+          editBoard={editBoardFromModal}
+          modalBoard={modalBoard!}
+          htmlForString="addBoardModal"
+          title="New Board"
+        />
+      )}
+      {getCurrentBoard() !== null && modalBoard != null && (
+        <BoardCreatorModal
+          addColumn={addColumnToModalBoard}
+          editColumn={editColumnInModalBoard}
+          editName={editNameInModalBoard}
+          removeColumn={removeColumnFromModalBoard}
+          addBoard={addBoardFromModal}
+          editBoard={editBoardFromModal}
+          modalBoard={modalBoard!}
           htmlForString="editBoardModal"
           title={getCurrentBoard()!.name}
         />
-      )}*/}
+      )}
       <BoardDisplay
         boardToDisplay={getCurrentBoard()}
         setCurrentTask={setCurrentTask}

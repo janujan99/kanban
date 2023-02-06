@@ -3,6 +3,7 @@ import { Board, BoardDisplayUnit } from "./kanbanStates";
 interface NavDropDownProps {
   boardDisplayUnit: BoardDisplayUnit;
   switchBoard: (index: number) => void;
+  resetModalBoardToAddMode: () => void;
 }
 export default function NavDropDown(props: NavDropDownProps) {
   let boardDisplayList = [];
@@ -33,7 +34,12 @@ export default function NavDropDown(props: NavDropDownProps) {
           {boardDisplayList}
           <br></br>
           <li>
-            <label htmlFor="addBoardModal">+ Create New Board</label>
+            <label
+              htmlFor="addBoardModal"
+              onClick={props.resetModalBoardToAddMode}
+            >
+              + Create New Board
+            </label>
           </li>
           <li></li>
         </ul>
