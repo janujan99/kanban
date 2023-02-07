@@ -1,84 +1,44 @@
 import React, { useState } from "react";
 import BoardDisplay from "./BoardDisplay";
-import { BoardDisplayUnit, Task, SubTask } from "./kanbanStates";
+import { BoardDisplayUnit, Task, SubTask, Column, Board } from "./kanbanStates";
 import ModalTextInput from "./ModalTextInput";
 import FormTextInput from "./FormTextInput";
 interface TaskModalProps {
-  saveTask: (colIndex: number, task: Task) => void;
-  boardDisplayUnit: BoardDisplayUnit;
+  editName: (name: string) => void;
+  editDescription: (description: string) => void;
+  addSubTask: () => void;
+  editSubTaskTitle: (val: string, i: number) => void;
+  removeSubTask: (i: number) => void;
+  setColumnForTask: (i: number) => void;
+  addTaskToBoard: () => void;
+  columnList: Column[];
+  columnNumberToAddTaskTo: number;
+  modalTask: Task;
 }
 export default function TaskModal(props: TaskModalProps) {
-  const [currTask, setCurrTask] = useState({
-    title: "eg. Take coffee break",
-    description:
-      "e.g. It's always good to take a break. The 15 minute break will recharge the batteries a little.",
-    subTasks: [
-      { title: "eg. Make coffee", isCompleted: false },
-      { title: "eg. Drink coffee and smile", isCompleted: false },
-    ],
-  });
-  const [currColumnIndex, setCurrColumnIndex] = useState<number>(0);
-
+  function setCurrColumn(index: number) {
+    props.setColumnForTask(index);
+  }
   function handleTitleChange(s: string) {
-    setCurrTask({
-      title: s,
-      description: currTask.description,
-      subTasks: currTask.subTasks,
-    });
+    props.editName(s);
   }
   function handleDescriptionChange(s: string) {
-    setCurrTask({
-      title: currTask.title,
-      description: s,
-      subTasks: currTask.subTasks,
-    });
+    props.editDescription(s);
   }
   function addSubTask() {
-    setCurrTask({
-      title: currTask.title,
-      description: currTask.description,
-      subTasks: currTask.subTasks.concat({
-        title: "eg. Make coffee",
-        isCompleted: false,
-      }),
-    });
+    props.addSubTask();
   }
   function removeSubTask(index: number) {
-    let temp: SubTask[] = [];
-    for (let i = 0; i < currTask.subTasks.length; i++) {
-      if (i !== index) temp.push(currTask.subTasks[i]);
-    }
-    setCurrTask({
-      title: currTask.title,
-      description: currTask.description,
-      subTasks: temp,
-    });
+    props.removeSubTask(index);
   }
   function editSubTaskTitle(value: string, index: number) {
-    let temp: SubTask[] = currTask.subTasks.map((i) => i);
-    temp[index].title = value;
-    setCurrTask({
-      title: currTask.title,
-      description: currTask.description,
-      subTasks: temp,
-    });
+    props.editSubTaskTitle(value, index);
   }
-  let subTaskRows = [];
-  for (let i = 0; i < currTask.subTasks.length; i++) {
-    subTaskRows.push(
-      <FormTextInput
-        index={i}
-        placeholder={currTask.subTasks[i].title}
-        value={currTask.subTasks[i].title}
-        handleExitClick={removeSubTask}
-        handleChange={editSubTaskTitle}
-      />
-    );
-  }
+
   return (
     <div>
       {/* The button to open modal, which only displays if there are boards already there */}
-      {props.boardDisplayUnit!.boards.length > 0 && (
+      {props.modalTask !== null && (
         <label htmlFor="taskModal" className="btn">
           + New Task
         </label>
@@ -90,12 +50,12 @@ export default function TaskModal(props: TaskModalProps) {
           <h3 className="font-bold text-lg">Add New Task</h3>
           <ModalTextInput
             label="Title"
-            placeholder={currTask.title}
+            placeholder={props.modalTask.title}
             handleChange={handleTitleChange}
           />
           <ModalTextInput
             label="Description"
-            placeholder={currTask.description}
+            placeholder={props.modalTask.description}
             handleChange={handleDescriptionChange}
           />
           <div>
@@ -104,7 +64,15 @@ export default function TaskModal(props: TaskModalProps) {
               <span className="label-text-alt"></span>
             </label>
 
-            {subTaskRows}
+            {props.modalTask.subTasks.map((col, i) => (
+              <FormTextInput
+                index={i}
+                placeholder={props.modalTask.subTasks[i].title}
+                value={props.modalTask.subTasks[i].title}
+                handleExitClick={removeSubTask}
+                handleChange={editSubTaskTitle}
+              />
+            ))}
             <button className="btn" onClick={() => addSubTask()}>
               + Add New Subtask
             </button>
@@ -113,23 +81,17 @@ export default function TaskModal(props: TaskModalProps) {
             <span className="label-text">Status</span>
             <span className="label-text-alt"></span>
           </label>
-          {props.boardDisplayUnit.boards.length > 0 && (
+          {props.modalTask !== null && (
             <div className="dropdown">
               <label tabIndex={0} className="btn m-1">
-                {
-                  props.boardDisplayUnit!.boards[
-                    props.boardDisplayUnit!.currBoardIndex
-                  ].columns[currColumnIndex].name
-                }
+                {props.columnList[props.columnNumberToAddTaskTo].name}
               </label>
               <ul
                 tabIndex={0}
                 className="dropdown-content menu p-2 shadow bg-base-100 rounded-box w-52"
               >
-                {props.boardDisplayUnit!.boards[
-                  props.boardDisplayUnit!.currBoardIndex
-                ].columns.map((col, i) => (
-                  <li onClick={() => setCurrColumnIndex(i)}>
+                {props.columnList.map((col, i) => (
+                  <li onClick={() => setCurrColumn(i)}>
                     <a>{col.name}</a>
                   </li>
                 ))}
@@ -140,7 +102,7 @@ export default function TaskModal(props: TaskModalProps) {
             <label
               htmlFor="taskModal"
               className="btn"
-              onClick={() => props.saveTask(currColumnIndex, currTask)}
+              onClick={() => props.addTaskToBoard()}
             >
               Submit
             </label>

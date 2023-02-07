@@ -1,17 +1,18 @@
 import React, { useState, useEffect } from "react";
 import logo from "./logo.svg";
 import "./App.css";
-import { Board, BoardDisplayUnit, Task, Column } from "./kanbanStates";
+import { Board, BoardDisplayUnit, Task, Column, SubTask } from "./kanbanStates";
 import BoardCreatorModal from "./BoardCreatorModal";
 import BoardDeletionWarningModal from "./BoardDeletionWarningModal";
 import TaskViewerModal from "./TaskViewerModal";
 import NavBar from "./NavBar";
 import BoardDisplay from "./BoardDisplay";
+import TaskModal from "./TaskModal";
 
 function App() {
   const [boardDisplayData, setBoardDisplayData] = useState<BoardDisplayUnit>({
     boards: [],
-    currBoardIndex: -1,
+    currBoardIndex: 0,
     currColumnIndex: -1,
     currTaskIndex: -1,
   });
@@ -24,10 +25,109 @@ function App() {
       { name: "Done", tasks: [] },
     ],
   });
+
   const [modalTask, setModalTask] = useState<Task | null>(null);
 
+  const [columnToAddTaskTo, setColumnToAddTaskTo] = useState<number>(0);
+  console.log(modalTask);
   function getObjectDeepCopy(a: Object) {
     return JSON.parse(JSON.stringify(a));
+  }
+  //modal Task functions
+  function setColumnForTask(i: number) {
+    setColumnToAddTaskTo(i);
+  }
+  function resetModalTaskToNull() {
+    setModalTask(null);
+  }
+  function resetModalTaskToAddMode() {
+    setModalTask({
+      title: "eg. Take coffee break",
+      description:
+        "e.g. It's always good to take a break. The 15 minute break will recharge the batteries a little.",
+      subTasks: [
+        { title: "eg. Make coffee", isCompleted: false },
+        { title: "eg. Drink coffee and smile", isCompleted: false },
+      ],
+    });
+  }
+  function resetModalTaskToEditMode() {
+    setModalTask(getCurrentTask()!);
+  }
+  function addTaskFromModal() {
+    let tempBoardDisplayUnit: BoardDisplayUnit =
+      getObjectDeepCopy(boardDisplayData);
+    tempBoardDisplayUnit.boards[boardDisplayData.currBoardIndex].columns[
+      columnToAddTaskTo
+    ].tasks.push(getObjectDeepCopy(modalTask!));
+    setBoardDisplayData(getObjectDeepCopy(tempBoardDisplayUnit));
+  }
+  function editTitleInModalTask(newName: string) {
+    let temp: Task =
+      getObjectDeepCopy(boardDisplayData)[boardDisplayData.currBoardIndex]
+        .columns[boardDisplayData.currColumnIndex].tasks[
+        boardDisplayData.currTaskIndex
+      ];
+    temp.title = newName;
+    setModalTask(getObjectDeepCopy(temp));
+  }
+  function editDescriptionInModalTask(newDescription: string) {
+    let temp: Task =
+      getObjectDeepCopy(boardDisplayData)[boardDisplayData.currBoardIndex]
+        .columns[boardDisplayData.currColumnIndex].tasks[
+        boardDisplayData.currTaskIndex
+      ];
+    temp.description = newDescription;
+    setModalTask(getObjectDeepCopy(temp));
+  }
+  function addSubTaskToModalTask() {
+    let temp: Task =
+      getObjectDeepCopy(boardDisplayData)[boardDisplayData.currBoardIndex]
+        .columns[boardDisplayData.currColumnIndex].tasks[
+        boardDisplayData.currTaskIndex
+      ];
+
+    temp.subTasks = temp.subTasks.concat({
+      title: "eg. Make coffee",
+      isCompleted: false,
+    });
+
+    setModalTask(getObjectDeepCopy(temp));
+  }
+  function removeSubTaskFromModalTask(index: number) {
+    let tempTask: Task =
+      getObjectDeepCopy(boardDisplayData)[boardDisplayData.currBoardIndex]
+        .columns[boardDisplayData.currColumnIndex].tasks[
+        boardDisplayData.currTaskIndex
+      ];
+
+    let newSubTasks: SubTask[] = [];
+
+    for (let i = 0; i < tempTask.subTasks.length; i++) {
+      if (i !== index) newSubTasks.push(tempTask.subTasks[i]);
+    }
+
+    tempTask.subTasks = newSubTasks.map((st: SubTask) => getObjectDeepCopy(st));
+
+    setModalTask(tempTask);
+  }
+  function toggleSubTaskCompletion(index: number) {
+    let temp: Task =
+      getObjectDeepCopy(boardDisplayData)[boardDisplayData.currBoardIndex]
+        .columns[boardDisplayData.currColumnIndex].tasks[
+        boardDisplayData.currTaskIndex
+      ];
+    temp.subTasks[index].isCompleted = !temp.subTasks[index].isCompleted;
+    setModalTask(getObjectDeepCopy(temp));
+  }
+  function editSubTaskTitleInModalTask(value: string, index: number) {
+    let temp: Task =
+      getObjectDeepCopy(boardDisplayData)[boardDisplayData.currBoardIndex]
+        .columns[boardDisplayData.currColumnIndex].tasks[
+        boardDisplayData.currTaskIndex
+      ];
+    temp.subTasks[index].title = value;
+    setModalTask(getObjectDeepCopy(temp));
   }
   //modal Board functions
   function resetModalBoardToNull() {
@@ -57,8 +157,8 @@ function App() {
       getObjectDeepCopy({
         boards: temp,
         currBoardIndex: temp.length - 1,
-        currColumnIndex: boardDisplayData.currColumnIndex,
-        currTaskIndex: boardDisplayData.currTaskIndex,
+        currColumnIndex: 0,
+        currTaskIndex: 0,
       })
     );
     resetModalBoardToNull();
@@ -98,7 +198,11 @@ function App() {
     setModalBoard({ name: modalBoard!.name, columns: temp });
   }
   function getCurrentBoard() {
-    if (boardDisplayData.currBoardIndex < 0) return null;
+    if (
+      boardDisplayData.currBoardIndex < 0 ||
+      boardDisplayData.boards.length == 0
+    )
+      return null;
     return boardDisplayData.boards[boardDisplayData.currBoardIndex];
   }
 
@@ -205,11 +309,11 @@ function App() {
   return (
     <div className="App">
       <NavBar
-        saveTask={addTask}
         boardDisplayUnit={boardDisplayData}
         switchBoard={setCurrentBoard}
         resetModalBoardToAddMode={resetModalBoardToAddMode}
         resetModalBoardToEditMode={resetModalBoardToEditMode}
+        resetModalTaskToAddMode={resetModalTaskToAddMode}
       />
       {modalBoard != null && (
         <BoardCreatorModal
@@ -241,6 +345,23 @@ function App() {
         boardToDisplay={getCurrentBoard()}
         setCurrentTask={setCurrentTask}
       />
+      {modalTask != null && (
+        <TaskModal
+          key="taskmodal1"
+          editName={editTitleInModalTask}
+          editDescription={editDescriptionInModalTask}
+          addSubTask={addSubTaskToModalTask}
+          editSubTaskTitle={editSubTaskTitleInModalTask}
+          removeSubTask={removeSubTaskFromModalTask}
+          setColumnForTask={setColumnToAddTaskTo}
+          addTaskToBoard={addTaskFromModal}
+          columnList={
+            boardDisplayData.boards[boardDisplayData.currBoardIndex].columns
+          }
+          columnNumberToAddTaskTo={columnToAddTaskTo}
+          modalTask={modalTask!}
+        />
+      )}
       {getCurrentTask() != null && (
         <TaskViewerModal task={getCurrentTask()!} editTask={editTask} />
       )}

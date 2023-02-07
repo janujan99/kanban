@@ -5,9 +5,9 @@ import { Board, BoardDisplayUnit, Task } from "./kanbanStates";
 interface NavBarProps {
   boardDisplayUnit: BoardDisplayUnit;
   switchBoard: (index: number) => void;
-  saveTask: (colIndex: number, task: Task) => void;
   resetModalBoardToAddMode: () => void;
   resetModalBoardToEditMode: () => void;
+  resetModalTaskToAddMode: () => void;
 }
 export default function NavBar(props: NavBarProps) {
   return (
@@ -36,11 +36,15 @@ export default function NavBar(props: NavBarProps) {
           switchBoard={props.switchBoard}
           resetModalBoardToAddMode={props.resetModalBoardToAddMode}
         />
-        <TaskModal
-          key="taskmodal1"
-          boardDisplayUnit={props.boardDisplayUnit}
-          saveTask={props.saveTask}
-        />
+        {props.boardDisplayUnit.boards.length > 0 && (
+          <label
+            htmlFor="taskModal"
+            className="btn"
+            onClick={props.resetModalTaskToAddMode}
+          >
+            + New Task
+          </label>
+        )}
       </div>
       <div className="dropdown">
         <label tabIndex={0} className="btn btn-ghost btn-circle">

@@ -5,7 +5,6 @@ interface ModalTextInputProps {
   handleChange: (s: string) => void;
 }
 export default function ModalTextInput(props: ModalTextInputProps) {
-  console.log("Placeholder: " + props.placeholder);
   return (
     <div className="form-control w-full max-w-xs">
       <label className="label">
