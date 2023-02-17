@@ -15,6 +15,7 @@ function App() {
     currBoardIndex: 0,
     currColumnIndex: -1,
     currTaskIndex: -1,
+    currTaskModalMode: "view",
   });
 
   const [modalBoard, setModalBoard] = useState<Board | null>({
@@ -29,9 +30,15 @@ function App() {
   const [modalTask, setModalTask] = useState<Task | null>(null);
 
   const [columnToAddTaskTo, setColumnToAddTaskTo] = useState<number>(0);
-  console.log(modalTask);
+  console.log("App mode: ", boardDisplayData.currTaskModalMode);
   function getObjectDeepCopy(a: Object) {
     return JSON.parse(JSON.stringify(a));
+  }
+  //set task mode
+  function setTaskModalMode(mode: "view" | "edit" | "delete") {
+    let tempData: BoardDisplayUnit = getObjectDeepCopy(boardDisplayData);
+    tempData.currTaskModalMode = mode;
+    setBoardDisplayData(getObjectDeepCopy(tempData));
   }
   //modal Task functions
   function setColumnForTask(i: number) {
@@ -62,6 +69,36 @@ function App() {
     ].tasks.push(getObjectDeepCopy(modalTask!));
     setBoardDisplayData(getObjectDeepCopy(tempBoardDisplayUnit));
     resetModalTaskToNull();
+  }
+  function deleteTaskFromModal() {
+    let tempBoardDisplayUnit: BoardDisplayUnit =
+      getObjectDeepCopy(boardDisplayData);
+    let newTasks: Task[] = [];
+    for (
+      let i = 0;
+      i <
+      tempBoardDisplayUnit.boards[tempBoardDisplayUnit.currBoardIndex].columns[
+        tempBoardDisplayUnit.currColumnIndex
+      ].tasks.length;
+      i++
+    ) {
+      if (i !== tempBoardDisplayUnit.currTaskIndex)
+        newTasks.push(
+          tempBoardDisplayUnit.boards[tempBoardDisplayUnit.currBoardIndex]
+            .columns[tempBoardDisplayUnit.currColumnIndex].tasks[i]
+        );
+    }
+    tempBoardDisplayUnit.boards[tempBoardDisplayUnit.currBoardIndex].columns[
+      tempBoardDisplayUnit.currColumnIndex
+    ].tasks = newTasks.map((o) => o);
+    tempBoardDisplayUnit.currTaskIndex =
+      tempBoardDisplayUnit.boards[tempBoardDisplayUnit.currBoardIndex].columns[
+        tempBoardDisplayUnit.currColumnIndex
+      ].tasks.length > 0
+        ? 0
+        : -1;
+    tempBoardDisplayUnit.currTaskModalMode = "view";
+    setBoardDisplayData(() => tempBoardDisplayUnit);
   }
   function editTaskFromModal() {
     let tempBoardDisplayUnit: BoardDisplayUnit =
@@ -145,6 +182,7 @@ function App() {
         currBoardIndex: temp.length - 1,
         currColumnIndex: 0,
         currTaskIndex: 0,
+        currTaskModalMode: boardDisplayData.currTaskModalMode,
       })
     );
     resetModalBoardToNull();
@@ -158,6 +196,7 @@ function App() {
       currBoardIndex: boardDisplayData.currBoardIndex,
       currColumnIndex: boardDisplayData.currColumnIndex,
       currTaskIndex: boardDisplayData.currTaskIndex,
+      currTaskModalMode: boardDisplayData.currTaskModalMode,
     });
     resetModalBoardToNull();
   }
@@ -204,65 +243,6 @@ function App() {
     ].tasks[boardDisplayData.currTaskIndex];
   }
 
-  function addTask(colIndex: number, task: Task) {
-    let temp: Board[] = boardDisplayData.boards.map((i) => i);
-    temp[boardDisplayData.currBoardIndex].columns[colIndex].tasks.push(task);
-    setBoardDisplayData({
-      boards: temp,
-      currBoardIndex: boardDisplayData.currBoardIndex,
-      currColumnIndex: colIndex,
-      currTaskIndex:
-        temp[boardDisplayData.currBoardIndex].columns[colIndex].tasks.length -
-        1,
-    });
-  }
-  function editTask(task: Task) {
-    let currTasks: Task[] = boardDisplayData.boards[
-      boardDisplayData.currBoardIndex
-    ].columns[boardDisplayData.currColumnIndex].tasks.map((i: Task) => i);
-    currTasks[boardDisplayData.currTaskIndex] = task;
-    let tempBoards: Board[] = boardDisplayData.boards.map((i) => i);
-    tempBoards[boardDisplayData.currBoardIndex].columns[
-      boardDisplayData.currColumnIndex
-    ].tasks = currTasks;
-    setBoardDisplayData({
-      boards: tempBoards,
-      currBoardIndex: boardDisplayData.currBoardIndex,
-      currColumnIndex: boardDisplayData.currColumnIndex,
-      currTaskIndex: boardDisplayData.currTaskIndex,
-    });
-  }
-  function saveBoard(board: Board, edit: boolean = false) {
-    if (edit) {
-      setBoardDisplayData((currentBoardUnit) => {
-        let temp: Board[] = [];
-        for (let i = 0; i < currentBoardUnit.boards.length; i++) {
-          if (i == currentBoardUnit.currBoardIndex) temp.push(board);
-          else temp.push(currentBoardUnit.boards[i]);
-        }
-        return {
-          boards: temp,
-          currBoardIndex: boardDisplayData.currBoardIndex,
-          currColumnIndex: board.columns.length > 0 ? 0 : -1,
-          currTaskIndex: -1,
-        };
-      });
-    } else {
-      setBoardDisplayData((currentBoardUnit) => {
-        let temp: Board[] = currentBoardUnit.boards.map((brd) => brd);
-        temp.push({
-          name: board.name,
-          columns: board.columns.map((col) => col),
-        });
-        return {
-          boards: temp,
-          currBoardIndex: temp.length - 1,
-          currColumnIndex: currentBoardUnit.currColumnIndex,
-          currTaskIndex: currentBoardUnit.currTaskIndex,
-        };
-      });
-    }
-  }
   function deleteBoard() {
     setBoardDisplayData({
       boards: boardDisplayData.boards.filter(
@@ -274,6 +254,7 @@ function App() {
           : 0,
       currColumnIndex: boardDisplayData.currColumnIndex,
       currTaskIndex: boardDisplayData.currTaskIndex,
+      currTaskModalMode: boardDisplayData.currTaskModalMode,
     });
   }
   function setCurrentBoard(index: number) {
@@ -282,6 +263,7 @@ function App() {
       currBoardIndex: index,
       currColumnIndex: boardDisplayData.currColumnIndex,
       currTaskIndex: boardDisplayData.currTaskIndex,
+      currTaskModalMode: boardDisplayData.currTaskModalMode,
     });
   }
   function setCurrentTask(colIndex: number, taskIndex: number) {
@@ -290,6 +272,7 @@ function App() {
       currBoardIndex: boardDisplayData.currBoardIndex,
       currColumnIndex: colIndex,
       currTaskIndex: taskIndex,
+      currTaskModalMode: boardDisplayData.currTaskModalMode,
     });
   }
 
@@ -351,9 +334,11 @@ function App() {
       )}
       {getCurrentTask() != null && (
         <TaskViewerModal
+          setTaskModalMode={setTaskModalMode}
+          mode={boardDisplayData.currTaskModalMode}
           task={getCurrentTask()!}
-          editTask={editTask}
           toggleSubTask={toggleSubTaskCompletion}
+          deleteTaskFromModal={deleteTaskFromModal}
         />
       )}
       <BoardDeletionWarningModal deleteBoard={deleteBoard} />

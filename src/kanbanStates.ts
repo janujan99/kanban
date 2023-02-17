@@ -20,4 +20,5 @@ export interface BoardDisplayUnit {
   currBoardIndex: number;
   currColumnIndex: number;
   currTaskIndex: number;
+  currTaskModalMode: "view" | "edit" | "delete";
 }
