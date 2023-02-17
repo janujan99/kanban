@@ -50,7 +50,7 @@ export default function TaskViewerModal(props: TaskViewerModalProps) {
       <input type="checkbox" id="taskViewerModal" className="modal-toggle" />
       <div className="modal">
         <div className="modal-box">
-          {props.mode == "view" && (
+          {props.mode === "view" && (
             <>
               <div>
                 <h3 className="font-bold text-lg">{props.task.title}</h3>
@@ -102,7 +102,7 @@ export default function TaskViewerModal(props: TaskViewerModalProps) {
               </div>
             </>
           )}
-          {props.mode == "delete" && (
+          {props.mode === "delete" && (
             <>
               <h1>Are you sure you want to delete this task?</h1>
               <label
@@ -117,7 +117,7 @@ export default function TaskViewerModal(props: TaskViewerModalProps) {
               </label>
             </>
           )}
-          {props.mode == "edit" && (
+          {props.mode === "edit" && (
             <>
               <h3 className="font-bold text-lg">Edit Task</h3>
               <ModalTextInput

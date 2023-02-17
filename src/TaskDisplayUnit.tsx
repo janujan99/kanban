@@ -13,13 +13,7 @@ export default function TaskDisplayUnit(props: TaskDisplayUnitProps) {
   ).length;
   let totalSubTasks: number = props.task.subTasks.length;
   return (
-    <label
-      htmlFor="taskViewerModal"
-      onClick={() => {
-        props.setCurrentTask();
-        props.setTaskModalMode("view");
-      }}
-    >
+    <label htmlFor="taskViewerModal" onClick={props.setCurrentTask}>
       <div className="taskDisplayUnit">
         <h1>{props.task.title}</h1>
         <h3>

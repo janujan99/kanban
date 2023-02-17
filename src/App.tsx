@@ -32,6 +32,7 @@ function App() {
   const [columnToAddTaskTo, setColumnToAddTaskTo] = useState<number>(0);
   console.log("App mode: ", boardDisplayData.currTaskModalMode);
   console.log(getCurrentTask());
+  console.log(boardDisplayData.currColumnIndex, boardDisplayData.currTaskIndex);
   function getObjectDeepCopy(a: Object) {
     return JSON.parse(JSON.stringify(a));
   }
@@ -71,7 +72,6 @@ function App() {
   function resetModalTaskToEditMode() {
     setModalTask(getCurrentTask()!);
   }
-  function setTaskToCurrent() {}
   function addTaskFromModal() {
     let tempBoardDisplayUnit: BoardDisplayUnit =
       getObjectDeepCopy(boardDisplayData);
@@ -311,22 +311,12 @@ function App() {
     });
   }
   function setCurrentTask(colIndex: number, taskIndex: number) {
-    let tempBoardDisplayUnit = {
-      boards: boardDisplayData.boards,
-      currBoardIndex: boardDisplayData.currBoardIndex,
-      currColumnIndex: colIndex,
-      currTaskIndex: taskIndex,
-      currTaskModalMode: boardDisplayData.currTaskModalMode,
-    };
-    setModalTask(() =>
-      getObjectDeepCopy(
-        tempBoardDisplayUnit.boards[tempBoardDisplayUnit.currBoardIndex]
-          .columns[tempBoardDisplayUnit.currColumnIndex].tasks[
-          tempBoardDisplayUnit.currTaskIndex
-        ]
-      )
-    );
-    setBoardDisplayData(() => getObjectDeepCopy(tempBoardDisplayUnit));
+    let temp: BoardDisplayUnit = getObjectDeepCopy(boardDisplayData);
+    temp.currColumnIndex = colIndex;
+    temp.currTaskIndex = taskIndex;
+    console.log("Hi");
+    temp.currTaskModalMode = "view";
+    setBoardDisplayData(() => getObjectDeepCopy(temp));
   }
 
   return (
