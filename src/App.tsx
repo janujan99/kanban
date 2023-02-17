@@ -148,6 +148,7 @@ function App() {
       })
     );
     resetModalBoardToNull();
+    setColumnToAddTaskTo(() => 0);
   }
   function editBoardFromModal() {
     let temp = boardDisplayData.boards.map((b) => b);
