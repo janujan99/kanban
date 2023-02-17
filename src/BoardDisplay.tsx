@@ -5,6 +5,7 @@ import TaskDisplayUnit from "./TaskDisplayUnit";
 interface BoardDisplayProps {
   boardToDisplay: Board | null;
   setCurrentTask: (a: number, b: number) => void;
+  setTaskModalMode: (mode: "view" | "edit" | "delete") => void;
 }
 export default function BoardDisplay(props: BoardDisplayProps) {
   //console.log(JSON.stringify(props.boardToDisplay));
@@ -26,6 +27,7 @@ export default function BoardDisplay(props: BoardDisplayProps) {
             <TaskDisplayUnit
               task={task}
               setCurrentTask={() => props.setCurrentTask(i, j)}
+              setTaskModalMode={props.setTaskModalMode}
             />
           ))}
         </li>

@@ -31,6 +31,7 @@ function App() {
 
   const [columnToAddTaskTo, setColumnToAddTaskTo] = useState<number>(0);
   console.log("App mode: ", boardDisplayData.currTaskModalMode);
+  console.log(getCurrentTask());
   function getObjectDeepCopy(a: Object) {
     return JSON.parse(JSON.stringify(a));
   }
@@ -39,6 +40,14 @@ function App() {
     let tempData: BoardDisplayUnit = getObjectDeepCopy(boardDisplayData);
     tempData.currTaskModalMode = mode;
     setBoardDisplayData(getObjectDeepCopy(tempData));
+    if (mode == "edit")
+      setModalTask(() =>
+        getObjectDeepCopy(
+          boardDisplayData.boards[boardDisplayData.currBoardIndex].columns[
+            boardDisplayData.currColumnIndex
+          ].tasks[boardDisplayData.currTaskIndex]
+        )
+      );
   }
   //modal Task functions
   function setColumnForTask(i: number) {
@@ -48,7 +57,7 @@ function App() {
     setModalTask((prevTask) => null);
   }
   function resetModalTaskToAddMode() {
-    setModalTask({
+    let defaultTask: Task = {
       title: "eg. Take coffee break",
       description:
         "e.g. It's always good to take a break. The 15 minute break will recharge the batteries a little.",
@@ -56,11 +65,13 @@ function App() {
         { title: "eg. Make coffee", isCompleted: false },
         { title: "eg. Drink coffee and smile", isCompleted: false },
       ],
-    });
+    };
+    setModalTask(() => getObjectDeepCopy(defaultTask));
   }
   function resetModalTaskToEditMode() {
     setModalTask(getCurrentTask()!);
   }
+  function setTaskToCurrent() {}
   function addTaskFromModal() {
     let tempBoardDisplayUnit: BoardDisplayUnit =
       getObjectDeepCopy(boardDisplayData);
@@ -69,6 +80,42 @@ function App() {
     ].tasks.push(getObjectDeepCopy(modalTask!));
     setBoardDisplayData(getObjectDeepCopy(tempBoardDisplayUnit));
     resetModalTaskToNull();
+  }
+  function editTaskFromModal() {
+    // delete task from original location
+    let tempBoardDisplayUnit: BoardDisplayUnit =
+      getObjectDeepCopy(boardDisplayData);
+    let newTasks: Task[] = [];
+    for (
+      let i = 0;
+      i <
+      tempBoardDisplayUnit.boards[tempBoardDisplayUnit.currBoardIndex].columns[
+        tempBoardDisplayUnit.currColumnIndex
+      ].tasks.length;
+      i++
+    ) {
+      if (i !== tempBoardDisplayUnit.currTaskIndex)
+        newTasks.push(
+          tempBoardDisplayUnit.boards[tempBoardDisplayUnit.currBoardIndex]
+            .columns[tempBoardDisplayUnit.currColumnIndex].tasks[i]
+        );
+    }
+    tempBoardDisplayUnit.boards[tempBoardDisplayUnit.currBoardIndex].columns[
+      tempBoardDisplayUnit.currColumnIndex
+    ].tasks = newTasks.map((o) => o);
+    let tempTask: Task = getObjectDeepCopy(modalTask!);
+    tempBoardDisplayUnit.boards[tempBoardDisplayUnit.currBoardIndex].columns[
+      columnToAddTaskTo
+    ].tasks.push(tempTask);
+    tempBoardDisplayUnit.currTaskModalMode = "view";
+    tempBoardDisplayUnit.currTaskIndex =
+      tempBoardDisplayUnit.boards[tempBoardDisplayUnit.currBoardIndex].columns[
+        columnToAddTaskTo
+      ].tasks.length - 1;
+    tempBoardDisplayUnit.currColumnIndex = columnToAddTaskTo;
+    setBoardDisplayData(() => tempBoardDisplayUnit);
+    setModalTask(() => null);
+    setColumnToAddTaskTo(() => 0);
   }
   function deleteTaskFromModal() {
     let tempBoardDisplayUnit: BoardDisplayUnit =
@@ -99,10 +146,7 @@ function App() {
         : -1;
     tempBoardDisplayUnit.currTaskModalMode = "view";
     setBoardDisplayData(() => tempBoardDisplayUnit);
-  }
-  function editTaskFromModal() {
-    let tempBoardDisplayUnit: BoardDisplayUnit =
-      getObjectDeepCopy(boardDisplayData);
+    resetModalTaskToNull();
   }
   function editTitleInModalTask(newName: string) {
     let temp: Task = getObjectDeepCopy(modalTask!);
@@ -267,13 +311,22 @@ function App() {
     });
   }
   function setCurrentTask(colIndex: number, taskIndex: number) {
-    setBoardDisplayData({
+    let tempBoardDisplayUnit = {
       boards: boardDisplayData.boards,
       currBoardIndex: boardDisplayData.currBoardIndex,
       currColumnIndex: colIndex,
       currTaskIndex: taskIndex,
       currTaskModalMode: boardDisplayData.currTaskModalMode,
-    });
+    };
+    setModalTask(() =>
+      getObjectDeepCopy(
+        tempBoardDisplayUnit.boards[tempBoardDisplayUnit.currBoardIndex]
+          .columns[tempBoardDisplayUnit.currColumnIndex].tasks[
+          tempBoardDisplayUnit.currTaskIndex
+        ]
+      )
+    );
+    setBoardDisplayData(() => getObjectDeepCopy(tempBoardDisplayUnit));
   }
 
   return (
@@ -314,6 +367,7 @@ function App() {
       <BoardDisplay
         boardToDisplay={getCurrentBoard()}
         setCurrentTask={setCurrentTask}
+        setTaskModalMode={setTaskModalMode}
       />
       {modalTask != null && (
         <TaskModal
@@ -339,6 +393,18 @@ function App() {
           task={getCurrentTask()!}
           toggleSubTask={toggleSubTaskCompletion}
           deleteTaskFromModal={deleteTaskFromModal}
+          editName={editTitleInModalTask}
+          editDescription={editDescriptionInModalTask}
+          addSubTask={addSubTaskToModalTask}
+          editSubTaskTitle={editSubTaskTitleInModalTask}
+          removeSubTask={removeSubTaskFromModalTask}
+          setColumnForTask={setColumnForTask}
+          editTaskOnBoard={editTaskFromModal}
+          columnList={
+            boardDisplayData.boards[boardDisplayData.currBoardIndex].columns
+          }
+          columnNumberToAddTaskTo={columnToAddTaskTo}
+          modalTask={modalTask!}
         />
       )}
       <BoardDeletionWarningModal deleteBoard={deleteBoard} />
