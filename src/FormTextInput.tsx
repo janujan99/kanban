@@ -10,7 +10,14 @@ export default function FormTextInput(props: FormTextInputProps) {
   const [placeholder, setPlaceholder] = useState(props.placeholder);
   //const [value, setValue] = useState(props.value);
   return (
-    <div>
+    <div
+      style={{
+        display: "flex",
+        flexDirection: "row",
+        marginTop: 3,
+        marginBottom: 5,
+      }}
+    >
       <input
         type="text"
         value={props.value}
@@ -18,10 +25,10 @@ export default function FormTextInput(props: FormTextInputProps) {
         onChange={(e) => {
           props.handleChange(e.target.value, props.index);
         }}
-        className="input input-bordered w-full max-w-xs"
+        className="input input-bordered w-4/5 mr-3"
       />
       <button
-        className="btn btn-circle"
+        className="btn btn-circle bg-white text-black border-none"
         onClick={() => {
           props.handleExitClick(props.index);
           setPlaceholder(props.placeholder);

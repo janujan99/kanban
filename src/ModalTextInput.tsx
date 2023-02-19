@@ -8,7 +8,9 @@ export default function ModalTextInput(props: ModalTextInputProps) {
   return (
     <div className="form-control w-full max-w-xs">
       <label className="label">
-        <span className="label-text">{props.label}</span>
+        <span className="label-text" style={{ color: "grey" }}>
+          {props.label}
+        </span>
         <span className="label-text-alt"></span>
       </label>
 
@@ -16,7 +18,7 @@ export default function ModalTextInput(props: ModalTextInputProps) {
         type="text"
         placeholder={props.placeholder}
         value={props.placeholder}
-        className="input input-bordered w-full max-w-xs"
+        className="input input-bordered w-5/8"
         onChange={(e) => {
           props.handleChange(e.target.value);
         }}

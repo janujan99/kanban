@@ -47,7 +47,7 @@ export default function BoardCreatorModal(props: BoardCreatorModalProps) {
         id={props.htmlForString}
         className="modal-toggle"
       />
-      <div className="modal">
+      <div className="modal w-4/5">
         <div className="modal-box">
           <h3 className="font-bold text-lg">
             {props.htmlForString == "addBoardModal"
@@ -60,17 +60,23 @@ export default function BoardCreatorModal(props: BoardCreatorModalProps) {
             handleChange={editName}
           />
           <label className="label">
-            <span className="label-text">Board Columns</span>
+            <span className="label-text" style={{ color: "grey" }}>
+              Board Columns
+            </span>
             <span className="label-text-alt"></span>
           </label>
           {columnRows}
-          <button className="btn" onClick={() => addColumn()}>
+          <button
+            className="btn bg-white hover:bg-custom-lightpurple border-none text-custom-darkpurple"
+            style={{ marginTop: 10 }}
+            onClick={() => addColumn()}
+          >
             + Add New Column
           </button>
           <div className="modal-action">
             <label
               htmlFor={props.htmlForString}
-              className="btn"
+              className="btn bg-custom-darkpurple hover:bg-custom-lightpurple border-none"
               onClick={
                 props.htmlForString == "addBoardModal"
                   ? props.addBoard

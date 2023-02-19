@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { Board, BoardDisplayUnit } from "./kanbanStates";
+//import "./NavDropDown.css";
 interface NavDropDownProps {
   boardDisplayUnit: BoardDisplayUnit;
   switchBoard: (index: number) => void;
@@ -19,11 +20,14 @@ export default function NavDropDown(props: NavDropDownProps) {
   return (
     <div>
       <div className="dropdown">
-        <label tabIndex={0} className="btn m-1 background bg-white">
+        <label
+          tabIndex={0}
+          className="btn m-1 background bg-white border-none text-black"
+        >
           {props.boardDisplayUnit.boards.length > 0
             ? props.boardDisplayUnit.boards[
                 props.boardDisplayUnit.currBoardIndex
-              ].name
+              ].name + "      ˅"
             : "Kanban"}
         </label>
         <ul
@@ -37,6 +41,7 @@ export default function NavDropDown(props: NavDropDownProps) {
             <label
               htmlFor="addBoardModal"
               onClick={props.resetModalBoardToAddMode}
+              className="background bg-custom-darkpurple"
             >
               + Create New Board
             </label>

@@ -48,7 +48,7 @@ export default function TaskViewerModal(props: TaskViewerModalProps) {
   return (
     <>
       <input type="checkbox" id="taskViewerModal" className="modal-toggle" />
-      <div className="modal">
+      <div className="modal w-4/5">
         <div className="modal-box">
           {props.mode === "view" && (
             <>

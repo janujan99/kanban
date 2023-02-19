@@ -1,7 +1,9 @@
 import React, { useState } from "react";
 import { Board, Column, Task, SubTask } from "./kanbanStates";
 import "./TaskDisplayUnit.css";
+import "./BoardDisplay.css";
 import TaskDisplayUnit from "./TaskDisplayUnit";
+import { preProcessFile } from "typescript";
 interface BoardDisplayProps {
   boardToDisplay: Board | null;
   setCurrentTask: (a: number, b: number) => void;
@@ -19,20 +21,26 @@ export default function BoardDisplay(props: BoardDisplayProps) {
       </div>
     );
   return (
-    <div>
-      {props.boardToDisplay.columns.map((col, i) => (
-        <li key={i}>
-          <h1>{col.name}</h1>
-          {props.boardToDisplay!.columns[i].tasks.map((task, j) => (
-            <TaskDisplayUnit
-              task={task}
-              setCurrentTask={() => props.setCurrentTask(i, j)}
-              setTaskModalMode={props.setTaskModalMode}
-            />
-          ))}
-        </li>
-      ))}
-      <label htmlFor="editBoardModal">+ Add New Column</label>
+    <div style={{ backgroundColor: "#f4f7fd" }}>
+      <div className="boardColumnsAndTasks">
+        {props.boardToDisplay.columns.map((col, i) => (
+          <li key={i} className="listColumn">
+            <h1 className="columnTitle">{col.name.toUpperCase()}</h1>
+            {props.boardToDisplay!.columns[i].tasks.map((task, j) => (
+              <TaskDisplayUnit
+                task={task}
+                setCurrentTask={() => props.setCurrentTask(i, j)}
+                setTaskModalMode={props.setTaskModalMode}
+              />
+            ))}
+          </li>
+        ))}
+        <label htmlFor="editBoardModal" className="btn bg-custom h-full">
+          {props.boardToDisplay!.columns.length > 0
+            ? "+ New Column"
+            : "+ Add New Column"}
+        </label>
+      </div>
     </div>
   );
 }

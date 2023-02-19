@@ -1,3 +1,14 @@
 div.taskDisplayUnit {
-  border: 1px solid black;
+  background-color: #f4f7fd;
+  box-shadow: 0 3px 10px rgb(0 0 0 / 0.2);
+  width: 100%;
+}
+h1.taskTitle {
+  font-weight: bold;
+  font-size: 15px;
+}
+h3.numSubTasksCompleted {
+  font-weight: medium;
+  font-size: 12px;
+  color: grey;
 }

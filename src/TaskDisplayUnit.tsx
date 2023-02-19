@@ -15,8 +15,8 @@ export default function TaskDisplayUnit(props: TaskDisplayUnitProps) {
   return (
     <label htmlFor="taskViewerModal" onClick={props.setCurrentTask}>
       <div className="taskDisplayUnit">
-        <h1>{props.task.title}</h1>
-        <h3>
+        <h1 className="taskTitle">{props.task.title}</h1>
+        <h3 className="numSubTasksCompleted">
           {numSubTasksCompleted} of {totalSubTasks} completed
         </h3>
       </div>

@@ -45,7 +45,7 @@ export default function TaskModal(props: TaskModalProps) {
       )}
       {/* Put this part before </body> tag */}
       <input type="checkbox" id="taskModal" className="modal-toggle" />
-      <div className="modal">
+      <div className="modal w-4/5">
         <div className="modal-box">
           <h3 className="font-bold text-lg">Add New Task</h3>
           <ModalTextInput
@@ -82,8 +82,11 @@ export default function TaskModal(props: TaskModalProps) {
             <span className="label-text-alt"></span>
           </label>
           {props.modalTask !== null && (
-            <div className="dropdown">
-              <label tabIndex={0} className="btn m-1">
+            <div className="dropdown bg-white text-black">
+              <label
+                tabIndex={0}
+                className="btn m-1 text-black bg-white text-none !important width-52"
+              >
                 {props.columnList[props.columnNumberToAddTaskTo].name}
               </label>
               <ul
