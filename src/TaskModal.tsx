@@ -58,9 +58,9 @@ export default function TaskModal(props: TaskModalProps) {
             placeholder={props.modalTask.description}
             handleChange={handleDescriptionChange}
           />
-          <div>
+          <div style={{ width: "100%" }}>
             <label className="label">
-              <span className="label-text">Subtask</span>
+              <span className="label-text">Subtasks</span>
               <span className="label-text-alt"></span>
             </label>
 
@@ -73,7 +73,10 @@ export default function TaskModal(props: TaskModalProps) {
                 handleChange={editSubTaskTitle}
               />
             ))}
-            <button className="btn" onClick={() => addSubTask()}>
+            <button
+              className="btn bg-custom-lightpurple text-custom-darkpurple border-none rounded-full w-full mt-3"
+              onClick={() => addSubTask()}
+            >
               + Add New Subtask
             </button>
           </div>
@@ -85,7 +88,7 @@ export default function TaskModal(props: TaskModalProps) {
             <div className="dropdown bg-white text-black">
               <label
                 tabIndex={0}
-                className="btn m-1 text-black bg-white text-none !important width-52"
+                className="btn m-1 text-black bg-white text-none !important width-52 dropdown-arrow"
               >
                 {props.columnList[props.columnNumberToAddTaskTo].name}
               </label>
@@ -101,13 +104,13 @@ export default function TaskModal(props: TaskModalProps) {
               </ul>
             </div>
           )}
-          <div className="modal-action">
+          <div className="modal-action justify-center w-full">
             <label
               htmlFor="taskModal"
-              className="btn"
+              className="btn bg-custom-darkpurple text-white border-none rounded-full w-full hover:bg-custom-lightpurple"
               onClick={() => props.addTaskToBoard()}
             >
-              Submit
+              Create Task
             </label>
           </div>
         </div>

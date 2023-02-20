@@ -24,7 +24,7 @@ export default function NavBar(props: NavBarProps) {
               strokeLinecap="round"
               strokeLinejoin="round"
               strokeWidth="2"
-              d="M5 12h.01M12 12h.01M19 12h.01M6 12a1 1 0 11-2 0 1 1 0 012 0zm7 0a1 1 0 11-2 0 1 1 0 012 0zm7 0a1 1 0 11-2 0 1 1 0 012 0z"
+              d="M4 6h16M4 12h16M4 18h7"
             ></path>
           </svg>
         </button>
@@ -46,7 +46,7 @@ export default function NavBar(props: NavBarProps) {
           </label>
         )}
       </div>
-      <div className="dropdown">
+      <div className="dropdown dropdown-end justify-left">
         <label tabIndex={0} className="btn btn-ghost btn-circle">
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -59,7 +59,7 @@ export default function NavBar(props: NavBarProps) {
               strokeLinecap="round"
               strokeLinejoin="round"
               strokeWidth="2"
-              d="M4 6h16M4 12h16M4 18h7"
+              d="M5 12h.01M12 12h.01M19 12h.01M6 12a1 1 0 11-2 0 1 1 0 012 0zm7 0a1 1 0 11-2 0 1 1 0 012 0zm7 0a1 1 0 11-2 0 1 1 0 012 0z"
             />
           </svg>
         </label>
@@ -72,7 +72,7 @@ export default function NavBar(props: NavBarProps) {
               htmlFor="editBoardModal"
               onClick={props.resetModalBoardToEditMode}
             >
-              + Edit Board
+              Edit Board
             </label>
           </li>
           <li>

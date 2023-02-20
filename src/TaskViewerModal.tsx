@@ -52,11 +52,44 @@ export default function TaskViewerModal(props: TaskViewerModalProps) {
         <div className="modal-box">
           {props.mode === "view" && (
             <>
-              <div>
-                <h3 className="font-bold text-lg">{props.task.title}</h3>
+              <div
+                style={{
+                  display: "flex",
+                  flexDirection: "row",
+                  justifyContent: "center",
+                }}
+              >
+                <h3
+                  className="font-bold text-lg"
+                  style={{
+                    fontWeight: "bold",
+                    fontSize: 18,
+                    display: "flex",
+                    justifyContent: "center",
+                    alignItems: "center",
+                  }}
+                >
+                  {props.task.title}
+                </h3>
                 <div className="dropdown">
-                  <label tabIndex={0} className="btn m-1">
-                    Click
+                  <label
+                    tabIndex={0}
+                    className="btn m-1 bg-white text-black border-none rotate-90"
+                  >
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      className="h-5 w-5"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth="2"
+                        d="M5 12h.01M12 12h.01M19 12h.01M6 12a1 1 0 11-2 0 1 1 0 012 0zm7 0a1 1 0 11-2 0 1 1 0 012 0zm7 0a1 1 0 11-2 0 1 1 0 012 0z"
+                      />
+                    </svg>
                   </label>
                   <ul
                     tabIndex={0}
@@ -71,14 +104,27 @@ export default function TaskViewerModal(props: TaskViewerModalProps) {
                   </ul>
                 </div>
               </div>
-              <p className="py-4">{props.task.description}</p>
-              <h1 className="font-bold text-lg">Subtasks</h1>
+              <p
+                className="py-4"
+                style={{ color: "grey", fontWeight: "bold", fontSize: 13 }}
+              >
+                {props.task.description}
+              </p>
+              <h1 className="font-bold text-lg text-left">Subtasks</h1>
               {props.task.subTasks.map((st: SubTask, i: number) => (
-                <div key={i}>
+                <div
+                  key={i}
+                  style={{
+                    display: "flex",
+                    flexDirection: "row",
+                    justifyContent: "center",
+                  }}
+                >
                   <input
                     type="checkbox"
                     checked={props.task.subTasks[i].isCompleted}
                     onChange={() => toggleCheck(i)}
+                    style={{}}
                   />
                   {!st.isCompleted && <h3>{st.title}</h3>}
                   {st.isCompleted && (
@@ -89,15 +135,8 @@ export default function TaskViewerModal(props: TaskViewerModalProps) {
                 </div>
               ))}
               <div className="modal-action">
-                <label
-                  htmlFor="taskViewerModal"
-                  className="btn"
-                  onClick={() => console.log("Hi")}
-                >
-                  Save Changes
-                </label>
                 <label htmlFor="taskViewerModal" className="btn">
-                  Close
+                  Save Changes
                 </label>
               </div>
             </>

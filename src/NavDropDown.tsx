@@ -41,7 +41,7 @@ export default function NavDropDown(props: NavDropDownProps) {
             <label
               htmlFor="addBoardModal"
               onClick={props.resetModalBoardToAddMode}
-              className="background bg-custom-darkpurple"
+              className="background bg-white"
             >
               + Create New Board
             </label>

@@ -17,7 +17,7 @@ export default function TaskDisplayUnit(props: TaskDisplayUnitProps) {
       <div className="taskDisplayUnit">
         <h1 className="taskTitle">{props.task.title}</h1>
         <h3 className="numSubTasksCompleted">
-          {numSubTasksCompleted} of {totalSubTasks} completed
+          {numSubTasksCompleted} of {totalSubTasks} subtasks
         </h3>
       </div>
     </label>
