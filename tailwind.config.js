@@ -7,6 +7,8 @@ module.exports = {
         custom: {
           darkpurple: "#635fc7",
           lightpurple: "#a8a4ff",
+          darkred: "#ea5555",
+          lightred: "#ff9898",
         },
       },
     },

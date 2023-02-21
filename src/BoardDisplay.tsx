@@ -21,7 +21,7 @@ export default function BoardDisplay(props: BoardDisplayProps) {
       </div>
     );
   return (
-    <div style={{ backgroundColor: "#f4f7fd" }}>
+    <div style={{ backgroundColor: "#f4f7fd", height: "100%" }}>
       <div className="boardColumnsAndTasks">
         {props.boardToDisplay.columns.map((col, i) => (
           <li key={i} className="listColumn">
