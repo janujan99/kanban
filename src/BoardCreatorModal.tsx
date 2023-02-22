@@ -1,22 +1,21 @@
-import React, { useState } from "react";
+import React, { useState, Dispatch } from "react";
 import { Board, Column, BoardDisplayUnit } from "./kanbanStates";
 import FormTextInput from "./FormTextInput";
 import ModalTextInput from "./ModalTextInput";
+import { Action } from "./App";
 interface BoardCreatorModalProps {
-  addColumn: () => void;
-  editColumn: (newValue: string, index: number) => void;
-  editName: (newName: string) => void;
-  removeColumn: (index: number) => void;
-  addBoard: () => void;
-  editBoard: () => void;
   modalBoard: Board;
+  dispatch: Dispatch<Action>;
   htmlForString: string;
   title: string;
 }
 
 export default function BoardCreatorModal(props: BoardCreatorModalProps) {
   function removeColumn(index: number) {
-    props.removeColumn(index);
+    props.dispatch({
+      type: "removeColumnFromModalBoard",
+      payload: { index: index },
+    });
   }
   function editName(newName: string) {
     props.editName(newName);
@@ -77,11 +76,7 @@ export default function BoardCreatorModal(props: BoardCreatorModalProps) {
             <label
               htmlFor={props.htmlForString}
               className="btn bg-custom-darkpurple hover:bg-custom-lightpurple border-none"
-              onClick={
-                props.htmlForString == "addBoardModal"
-                  ? props.addBoard
-                  : props.editBoard
-              }
+              onClick={() => dispatch()}
             >
               Save Changes
             </label>

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useReducer, Reducer } from "react";
 import logo from "./logo.svg";
 import "./App.css";
 import { Board, BoardDisplayUnit, Task, Column, SubTask } from "./kanbanStates";
@@ -9,14 +9,66 @@ import NavBar from "./NavBar";
 import BoardDisplay from "./BoardDisplay";
 import TaskModal from "./TaskModal";
 
+export type Action =
+  | { type: "addBoard", payload: {board: Board}}
+  | { type: "addColumnToModalBoard", payload: {column: string}}
+  | { type: "removeColumnFromModalBoard", payload: {index: number}}
+  | { type: "editColumnInModalBoard", payload: {newValue: string, index: number}}
+  | { type: "editBoard" }
+  | { type: "deleteBoard" };
+
+export function boardDisplayUnitReducer(
+  state: BoardDisplayUnit,
+  action: Action
+): BoardDisplayUnit {
+  switch (action.type) {
+    case "addBoard":
+      let newBoards = state.boards.concat([
+        JSON.parse(JSON.stringify(action.payload)),
+      ]);
+      return {
+        boards: newBoards,
+        currBoardIndex: newBoards.length - 1,
+        currColumnIndex: state.currColumnIndex,
+        currTaskIndex: state.currTaskIndex,
+        currTaskModalMode: state.currTaskModalMode,
+        modalBoard: {
+          name: "New Board",
+          columns: [
+            { name: "Todo", tasks: [] },
+            { name: "Doing", tasks: [] },
+            { name: "Done", tasks: [] },
+          ],
+        },
+        modalTask: null,
+        columnToAddTaskTo: 0
+      };
+    default:
+      return state
+  }
+}
 function App() {
-  const [boardDisplayData, setBoardDisplayData] = useState<BoardDisplayUnit>({
+  let newBoard = {
     boards: [],
     currBoardIndex: 0,
     currColumnIndex: -1,
     currTaskIndex: -1,
     currTaskModalMode: "view",
-  });
+    modalBoard: {
+      name: "New Board",
+      columns: [
+        { name: "Todo", tasks: [] },
+        { name: "Doing", tasks: [] },
+        { name: "Done", tasks: [] },
+      ],
+    },
+    modalTask: null,
+    columnToAddTaskTo: 0
+  };
+  const [boardState, dispatch] = useReducer<any>(
+    boardDisplayUnitReducer,
+    newBoard
+  );
 
   const [modalBoard, setModalBoard] = useState<Board | null>({
     name: "New Board",
@@ -241,6 +293,7 @@ function App() {
       currColumnIndex: boardDisplayData.currColumnIndex,
       currTaskIndex: boardDisplayData.currTaskIndex,
       currTaskModalMode: boardDisplayData.currTaskModalMode,
+
     });
     resetModalBoardToNull();
   }
@@ -322,7 +375,7 @@ function App() {
   return (
     <div className="App">
       <NavBar
-        boardDisplayUnit={boardDisplayData}
+        boardDisplayUnit={boardState}
         switchBoard={setCurrentBoard}
         resetModalBoardToAddMode={resetModalBoardToAddMode}
         resetModalBoardToEditMode={resetModalBoardToEditMode}
@@ -330,18 +383,14 @@ function App() {
       />
       {modalBoard != null && (
         <BoardCreatorModal
-          addColumn={addColumnToModalBoard}
-          editColumn={editColumnInModalBoard}
-          editName={editNameInModalBoard}
-          removeColumn={removeColumnFromModalBoard}
-          addBoard={addBoardFromModal}
-          editBoard={editBoardFromModal}
-          modalBoard={modalBoard!}
+        modalBoard={boardState.modalBoard}
+          dispatch={dispatch})}
+
           htmlForString="addBoardModal"
           title="New Board"
         />
       )}
-      {getCurrentBoard() !== null && modalBoard != null && (
+      {/*getCurrentBoard() !== null && modalBoard != null && (
         <BoardCreatorModal
           addColumn={addColumnToModalBoard}
           editColumn={editColumnInModalBoard}
@@ -353,13 +402,13 @@ function App() {
           htmlForString="editBoardModal"
           title={getCurrentBoard()!.name}
         />
-      )}
+      )*/}
       <BoardDisplay
         boardToDisplay={getCurrentBoard()}
         setCurrentTask={setCurrentTask}
         setTaskModalMode={setTaskModalMode}
       />
-      {modalTask != null && (
+      {/*modalTask != null && (
         <TaskModal
           key="taskmodal1"
           editName={editTitleInModalTask}
@@ -375,8 +424,8 @@ function App() {
           columnNumberToAddTaskTo={columnToAddTaskTo}
           modalTask={modalTask!}
         />
-      )}
-      {getCurrentTask() != null && (
+        )*/}
+      {/*getCurrentTask() != null && (
         <TaskViewerModal
           setTaskModalMode={setTaskModalMode}
           mode={boardDisplayData.currTaskModalMode}
@@ -396,7 +445,7 @@ function App() {
           columnNumberToAddTaskTo={columnToAddTaskTo}
           modalTask={modalTask!}
         />
-      )}
+      )}*/}
       <BoardDeletionWarningModal deleteBoard={deleteBoard} />
     </div>
   );
