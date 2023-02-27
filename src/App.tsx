@@ -8,8 +8,20 @@ import TaskViewerModal from "./TaskViewerModal";
 import NavBar from "./NavBar";
 import BoardDisplay from "./BoardDisplay";
 import TaskModal from "./TaskModal";
+import SideBar from "./SideBar";
 
 function App() {
+  const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
+  const [sideBarOpen, setSideBarOpen] = useState(true);
+  useEffect(() => {
+    const handleResize = () => {
+      setIsMobile(() => window.innerWidth <= 768);
+    };
+
+    window.addEventListener("resize", handleResize);
+
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
   const [boardDisplayData, setBoardDisplayData] = useState<BoardDisplayUnit>({
     boards: [],
     currBoardIndex: 0,
@@ -30,6 +42,14 @@ function App() {
   const [modalTask, setModalTask] = useState<Task | null>(null);
 
   const [columnToAddTaskTo, setColumnToAddTaskTo] = useState<number>(0);
+
+  //set sidebar
+  function closeSideBar() {
+    setSideBarOpen(() => false);
+  }
+  function openSideBar() {
+    setSideBarOpen(() => true);
+  }
   console.log("App mode: ", boardDisplayData.currTaskModalMode);
   console.log(getCurrentTask());
   console.log(boardDisplayData.currColumnIndex, boardDisplayData.currTaskIndex);
@@ -319,85 +339,131 @@ function App() {
     setBoardDisplayData(() => getObjectDeepCopy(temp));
   }
 
+  if (isMobile)
+    return (
+      <div className="App">
+        <NavBar
+          boardDisplayUnit={boardDisplayData}
+          switchBoard={setCurrentBoard}
+          resetModalBoardToAddMode={resetModalBoardToAddMode}
+          resetModalBoardToEditMode={resetModalBoardToEditMode}
+          resetModalTaskToAddMode={resetModalTaskToAddMode}
+        />
+        {modalBoard != null && (
+          <BoardCreatorModal
+            addColumn={addColumnToModalBoard}
+            editColumn={editColumnInModalBoard}
+            editName={editNameInModalBoard}
+            removeColumn={removeColumnFromModalBoard}
+            addBoard={addBoardFromModal}
+            editBoard={editBoardFromModal}
+            modalBoard={modalBoard!}
+            htmlForString="addBoardModal"
+            title="New Board"
+          />
+        )}
+        {getCurrentBoard() !== null && modalBoard != null && (
+          <BoardCreatorModal
+            addColumn={addColumnToModalBoard}
+            editColumn={editColumnInModalBoard}
+            editName={editNameInModalBoard}
+            removeColumn={removeColumnFromModalBoard}
+            addBoard={addBoardFromModal}
+            editBoard={editBoardFromModal}
+            modalBoard={modalBoard!}
+            htmlForString="editBoardModal"
+            title={getCurrentBoard()!.name}
+          />
+        )}
+        <BoardDisplay
+          boardToDisplay={getCurrentBoard()}
+          setCurrentTask={setCurrentTask}
+          setTaskModalMode={setTaskModalMode}
+        />
+        {modalTask != null && (
+          <TaskModal
+            key="taskmodal1"
+            editName={editTitleInModalTask}
+            editDescription={editDescriptionInModalTask}
+            addSubTask={addSubTaskToModalTask}
+            editSubTaskTitle={editSubTaskTitleInModalTask}
+            removeSubTask={removeSubTaskFromModalTask}
+            setColumnForTask={setColumnForTask}
+            addTaskToBoard={addTaskFromModal}
+            columnList={
+              boardDisplayData.boards[boardDisplayData.currBoardIndex].columns
+            }
+            columnNumberToAddTaskTo={columnToAddTaskTo}
+            modalTask={modalTask!}
+          />
+        )}
+        {getCurrentTask() != null && (
+          <TaskViewerModal
+            setTaskModalMode={setTaskModalMode}
+            mode={boardDisplayData.currTaskModalMode}
+            task={getCurrentTask()!}
+            toggleSubTask={toggleSubTaskCompletion}
+            deleteTaskFromModal={deleteTaskFromModal}
+            editName={editTitleInModalTask}
+            editDescription={editDescriptionInModalTask}
+            addSubTask={addSubTaskToModalTask}
+            editSubTaskTitle={editSubTaskTitleInModalTask}
+            removeSubTask={removeSubTaskFromModalTask}
+            setColumnForTask={setColumnForTask}
+            editTaskOnBoard={editTaskFromModal}
+            columnList={
+              boardDisplayData.boards[boardDisplayData.currBoardIndex].columns
+            }
+            columnNumberToAddTaskTo={columnToAddTaskTo}
+            modalTask={modalTask!}
+          />
+        )}
+        <BoardDeletionWarningModal deleteBoard={deleteBoard} />
+      </div>
+    );
   return (
     <div className="App">
-      <NavBar
-        boardDisplayUnit={boardDisplayData}
-        switchBoard={setCurrentBoard}
-        resetModalBoardToAddMode={resetModalBoardToAddMode}
-        resetModalBoardToEditMode={resetModalBoardToEditMode}
-        resetModalTaskToAddMode={resetModalTaskToAddMode}
-      />
-      {modalBoard != null && (
-        <BoardCreatorModal
-          addColumn={addColumnToModalBoard}
-          editColumn={editColumnInModalBoard}
-          editName={editNameInModalBoard}
-          removeColumn={removeColumnFromModalBoard}
-          addBoard={addBoardFromModal}
-          editBoard={editBoardFromModal}
-          modalBoard={modalBoard!}
-          htmlForString="addBoardModal"
-          title="New Board"
-        />
-      )}
-      {getCurrentBoard() !== null && modalBoard != null && (
-        <BoardCreatorModal
-          addColumn={addColumnToModalBoard}
-          editColumn={editColumnInModalBoard}
-          editName={editNameInModalBoard}
-          removeColumn={removeColumnFromModalBoard}
-          addBoard={addBoardFromModal}
-          editBoard={editBoardFromModal}
-          modalBoard={modalBoard!}
-          htmlForString="editBoardModal"
-          title={getCurrentBoard()!.name}
-        />
-      )}
-      <BoardDisplay
-        boardToDisplay={getCurrentBoard()}
-        setCurrentTask={setCurrentTask}
-        setTaskModalMode={setTaskModalMode}
-      />
-      {modalTask != null && (
-        <TaskModal
-          key="taskmodal1"
-          editName={editTitleInModalTask}
-          editDescription={editDescriptionInModalTask}
-          addSubTask={addSubTaskToModalTask}
-          editSubTaskTitle={editSubTaskTitleInModalTask}
-          removeSubTask={removeSubTaskFromModalTask}
-          setColumnForTask={setColumnForTask}
-          addTaskToBoard={addTaskFromModal}
-          columnList={
-            boardDisplayData.boards[boardDisplayData.currBoardIndex].columns
-          }
-          columnNumberToAddTaskTo={columnToAddTaskTo}
-          modalTask={modalTask!}
-        />
-      )}
-      {getCurrentTask() != null && (
-        <TaskViewerModal
+      <div style={{ display: "flex", flexDirection: "row" }}>
+        {sideBarOpen && (
+          <SideBar
+            boardDisplayUnit={boardDisplayData}
+            switchBoard={setCurrentBoard}
+            resetModalBoardToAddMode={resetModalBoardToAddMode}
+            hideSideBar={closeSideBar}
+          />
+        )}
+        {modalBoard != null && (
+          <BoardCreatorModal
+            addColumn={addColumnToModalBoard}
+            editColumn={editColumnInModalBoard}
+            editName={editNameInModalBoard}
+            removeColumn={removeColumnFromModalBoard}
+            addBoard={addBoardFromModal}
+            editBoard={editBoardFromModal}
+            modalBoard={modalBoard!}
+            htmlForString="addBoardModal"
+            title="New Board"
+          />
+        )}
+        {getCurrentBoard() !== null && modalBoard != null && (
+          <BoardCreatorModal
+            addColumn={addColumnToModalBoard}
+            editColumn={editColumnInModalBoard}
+            editName={editNameInModalBoard}
+            removeColumn={removeColumnFromModalBoard}
+            addBoard={addBoardFromModal}
+            editBoard={editBoardFromModal}
+            modalBoard={modalBoard!}
+            htmlForString="editBoardModal"
+            title={getCurrentBoard()!.name}
+          />
+        )}
+        <BoardDisplay
+          boardToDisplay={getCurrentBoard()}
+          setCurrentTask={setCurrentTask}
           setTaskModalMode={setTaskModalMode}
-          mode={boardDisplayData.currTaskModalMode}
-          task={getCurrentTask()!}
-          toggleSubTask={toggleSubTaskCompletion}
-          deleteTaskFromModal={deleteTaskFromModal}
-          editName={editTitleInModalTask}
-          editDescription={editDescriptionInModalTask}
-          addSubTask={addSubTaskToModalTask}
-          editSubTaskTitle={editSubTaskTitleInModalTask}
-          removeSubTask={removeSubTaskFromModalTask}
-          setColumnForTask={setColumnForTask}
-          editTaskOnBoard={editTaskFromModal}
-          columnList={
-            boardDisplayData.boards[boardDisplayData.currBoardIndex].columns
-          }
-          columnNumberToAddTaskTo={columnToAddTaskTo}
-          modalTask={modalTask!}
         />
-      )}
-      <BoardDeletionWarningModal deleteBoard={deleteBoard} />
+      </div>
     </div>
   );
 }

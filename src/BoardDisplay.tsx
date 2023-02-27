@@ -3,7 +3,6 @@ import { Board, Column, Task, SubTask } from "./kanbanStates";
 import "./TaskDisplayUnit.css";
 import "./BoardDisplay.css";
 import TaskDisplayUnit from "./TaskDisplayUnit";
-import { preProcessFile } from "typescript";
 interface BoardDisplayProps {
   boardToDisplay: Board | null;
   setCurrentTask: (a: number, b: number) => void;
