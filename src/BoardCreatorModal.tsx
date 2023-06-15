@@ -50,7 +50,7 @@ export default function BoardCreatorModal(props: BoardCreatorModalProps) {
       <div className="modal w-4/5">
         <div className="modal-box">
           <h3 className="font-bold text-lg">
-            {props.htmlForString == "addBoardModal"
+            {props.htmlForString === "addBoardModal"
               ? "Add New Board"
               : "Edit Board"}
           </h3>
@@ -78,7 +78,7 @@ export default function BoardCreatorModal(props: BoardCreatorModalProps) {
               htmlFor={props.htmlForString}
               className="btn bg-custom-darkpurple hover:bg-custom-lightpurple border-none"
               onClick={
-                props.htmlForString == "addBoardModal"
+                props.htmlForString === "addBoardModal"
                   ? props.addBoard
                   : props.editBoard
               }

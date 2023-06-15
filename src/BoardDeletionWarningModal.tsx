@@ -20,6 +20,7 @@ export default function BoardDeletionWarningModal(
           </p>
           <div>
             <label
+              className="text-red-400 mr-2 hover:text-red-300"
               htmlFor="deleteBoardModal"
               onClick={() => props.deleteBoard()}
             >
