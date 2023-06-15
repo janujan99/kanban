@@ -23,7 +23,7 @@ export default function NavBar(props: NavBarProps) {
         {props.boardDisplayUnit.boards.length > 0 && (
           <label
             htmlFor="taskModal"
-            className="btn bg-custom-lightpurple border-none text-lowercase"
+            className="btn bg-custom-lightpurple hover:bg-custom-darkpurple border-none text-lowercase"
             onClick={props.resetModalTaskToAddMode}
           >
             + New Task

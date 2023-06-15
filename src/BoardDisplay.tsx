@@ -23,7 +23,7 @@ export default function BoardDisplay(props: BoardDisplayProps) {
     <div style={{ backgroundColor: "#f4f7fd", height: "100%", width: "100%" }}>
       <div className="boardColumnsAndTasks">
         {props.boardToDisplay.columns.map((col, i) => (
-          <li key={i} className="listColumn">
+          <li key={i} className="listColumn list-none mt-3 mb-4">
             <h1 className="columnTitle">{col.name.toUpperCase()}</h1>
             {props.boardToDisplay!.columns[i].tasks.map((task, j) => (
               <TaskDisplayUnit

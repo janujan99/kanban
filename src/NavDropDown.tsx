@@ -22,7 +22,7 @@ export default function NavDropDown(props: NavDropDownProps) {
       <div className="dropdown">
         <label
           tabIndex={0}
-          className="btn m-1 background bg-white border-none text-black"
+          className="btn m-1 background bg-white border-none text-black hover:bg-white"
         >
           {props.boardDisplayUnit.boards.length > 0
             ? props.boardDisplayUnit.boards[
