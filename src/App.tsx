@@ -29,7 +29,7 @@ function App() {
     currTaskIndex: -1,
     currTaskModalMode: "view",
   });
-
+  console.log(boardDisplayData);
   const [modalBoard, setModalBoard] = useState<Board | null>({
     name: "New Board",
     columns: [
@@ -299,7 +299,7 @@ function App() {
   function getCurrentTask() {
     if (
       boardDisplayData.currColumnIndex < 0 ||
-      boardDisplayData.currTaskIndex < 0
+      boardDisplayData.currTaskIndex < 0 || boardDisplayData.currBoardIndex < 0
     )
       return null;
     return boardDisplayData.boards[boardDisplayData.currBoardIndex].columns[
@@ -308,16 +308,17 @@ function App() {
   }
 
   function deleteBoard() {
+    let newBoards: Board[] = boardDisplayData.boards.filter(
+      (el, i) => i !== boardDisplayData.currBoardIndex
+    );
+    let newCurrBoardIndex: number = newBoards.length > 0? boardDisplayData.currBoardIndex - 1: -1;
+    let newCurrColumnIndex: number = newCurrBoardIndex >= 0 && newBoards[newCurrBoardIndex].columns.length > 0? 0 : -1;
+    let newCurrTaskIndex: number = newCurrBoardIndex >= 0 && newCurrColumnIndex >= 0 && newBoards[newCurrBoardIndex].columns[newCurrColumnIndex].tasks.length > 0? 0 : -1;
     setBoardDisplayData({
-      boards: boardDisplayData.boards.filter(
-        (el, i) => i != boardDisplayData.currBoardIndex
-      ),
-      currBoardIndex:
-        boardDisplayData.currBoardIndex - 1 > 0
-          ? boardDisplayData.currBoardIndex - 1
-          : 0,
-      currColumnIndex: boardDisplayData.currColumnIndex,
-      currTaskIndex: boardDisplayData.currTaskIndex,
+      boards: newBoards,
+      currBoardIndex: newCurrBoardIndex,
+      currColumnIndex: newCurrColumnIndex,
+      currTaskIndex: newCurrTaskIndex,
       currTaskModalMode: boardDisplayData.currTaskModalMode,
     });
   }
