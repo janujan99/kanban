@@ -52,11 +52,11 @@ export default function NavBar(props: NavBarProps) {
             />
           </svg>
         </label>
-        <ul
+        {props.boardDisplayUnit.currBoardIndex !== -1 && <ul
           tabIndex={0}
           className="menu menu-compact dropdown-content mt-3 p-2 shadow bg-base-100 rounded-box w-52"
         >
-          <li>
+          <li >
             <label
               htmlFor="editBoardModal"
               onClick={props.resetModalBoardToEditMode}
@@ -67,7 +67,7 @@ export default function NavBar(props: NavBarProps) {
           <li>
             <label htmlFor="deleteBoardModal">Delete Board</label>
           </li>
-        </ul>
+        </ul>}
       </div>
     </div>
   );

@@ -24,12 +24,12 @@ function App() {
   }, []);
   const [boardDisplayData, setBoardDisplayData] = useState<BoardDisplayUnit>({
     boards: [],
-    currBoardIndex: 0,
+    currBoardIndex: -1,
     currColumnIndex: -1,
     currTaskIndex: -1,
     currTaskModalMode: "view",
   });
-  console.log(boardDisplayData);
+
   const [modalBoard, setModalBoard] = useState<Board | null>({
     name: "New Board",
     columns: [
