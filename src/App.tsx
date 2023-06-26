@@ -433,6 +433,10 @@ function App() {
             hideSideBar={closeSideBar}
           />
         )}
+        {!sideBarOpen && <div className="w-1/4" onClick={() => {
+          setSideBarOpen(() => true);
+        }}>Hi
+          </div>}
         {modalBoard != null && (
           <BoardCreatorModal
             addColumn={addColumnToModalBoard}
