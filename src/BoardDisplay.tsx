@@ -11,8 +11,10 @@ interface BoardDisplayProps {
 export default function BoardDisplay(props: BoardDisplayProps) {
   //console.log(JSON.stringify(props.boardToDisplay));
   if (props.boardToDisplay == null)
-    return <h2>Create a board to get started</h2>;
-  else if (props.boardToDisplay.columns.length == 0)
+    return <div style={{ backgroundImage: "boeing-777-45414-2560x1600.jpg", height: "100%", width: "100%" }}>
+      <h2 className="color-white">Create a board to get started</h2>
+    </div>;
+  else if (props.boardToDisplay.columns.length === 0)
     return (
       <div>
         <h2>This board is empty. Add a column to get started</h2>

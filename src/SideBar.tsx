@@ -11,7 +11,7 @@ export default function SideBar(props: SideBarProps) {
     <>
       <div className="drawer-side">
         <label htmlFor="my-drawer" className="drawer-overlay"></label>
-        <h1>Kanban</h1>
+        <h1 className="mb-1/8 mt-1/8">Kanban</h1>
         <ul className="menu p-4 w-80 bg-base-100 text-base-content">
           {props.boardDisplayUnit.boards.map((board) => (
             <li>

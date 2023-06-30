@@ -422,9 +422,10 @@ function App() {
         <BoardDeletionWarningModal deleteBoard={deleteBoard} />
       </div>
     );
-  return (
+    
+  else return (
     <div className="App">
-      <div style={{ display: "flex", flexDirection: "row" }}>
+      <div style={{ display: "flex", flexDirection: "row", height: "100%" }}>
         {sideBarOpen && (
           <SideBar
             boardDisplayUnit={boardDisplayData}
