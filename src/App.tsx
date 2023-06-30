@@ -425,13 +425,14 @@ function App() {
     
   else return (
     <div className="App">
-      <div style={{ display: "flex", flexDirection: "row", height: "100%" }}>
+      <div className="boardContainer" style={{ display: "flex", flexDirection: "row", height: "100%" }}>
         {sideBarOpen && (
           <SideBar
             boardDisplayUnit={boardDisplayData}
             switchBoard={setCurrentBoard}
             resetModalBoardToAddMode={resetModalBoardToAddMode}
             hideSideBar={closeSideBar}
+            resetModalTaskToAddMode={resetModalTaskToAddMode}
           />
         )}
         {!sideBarOpen && <div className="w-1/4" onClick={() => {
